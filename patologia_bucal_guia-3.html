@@ -1,0 +1,3149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PATOLOGIA BUCAL - GUIA</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            clinical: {
+              50: '#f0f7fa',
+              100: '#d9ecf2',
+              200: '#b6d9e5',
+              500: '#1a6b80',
+              600: '#0f4c5c',
+              700: '#0b3a47',
+              900: '#07242d',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       ESTILOS COMPLEMENTARIOS PARA ANIMACIONES 3D, LLAVES SINÓPTICAS Y DETALLES
+       ========================================================================== */
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Tarjeta 3D Flip para Flashcards */
+    .perspective-1200 {
+      perspective: 1200px;
+    }
+    .preserve-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+    .preserve-3d.flipped {
+      transform: rotateY(180deg);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    /* Animaciones suaves */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.24s ease-out forwards;
+    }
+
+    @keyframes shakeX {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .animate-shake {
+      animation: shakeX 0.3s ease;
+    }
+
+    /* Scrollbar estilizada para barras horizontales */
+    .thin-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .thin-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .thin-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.45);
+      border-radius: 9999px;
+    }
+
+    /* Contenedor de llave SVG sinóptica */
+    .synoptic-brace-svg {
+      width: 24px;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+  <!-- ========================================================================
+       ENCABEZADO SUPERIOR
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Identidad de marca -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-clinical-600 to-emerald-600 text-white flex items-center justify-center shadow-md shrink-0">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3C9.5 3 7.8 4.2 6.5 4.2C4.8 4.2 3.5 5.6 3.5 7.8C3.5 11.2 5.2 13.8 6.1 17.5C6.6 19.6 7.4 21 8.6 21C9.8 21 10.2 18.2 12 18.2C13.8 18.2 14.2 21 15.4 21C16.6 21 17.4 19.6 17.9 17.5C18.8 13.8 20.5 11.2 20.5 7.8C20.5 5.6 19.2 4.2 17.5 4.2C16.2 4.2 14.5 3 12 3Z"/>
+            <path d="M9.5 9.5h5M12 7v5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            PATOLOGIA BUCAL
+          </h1>
+          <p class="text-xs font-bold tracking-widest uppercase text-clinical-600 dark:text-cyan-400">
+            GUIA DE ESTUDIO INTERACTIVA
+          </p>
+        </div>
+      </div>
+
+      <!-- Indicadores de progreso y controles -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="btn-open-photos-modal" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm transition" title="Gestionar fotos de las 41 patologías y exportar HTML">
+          <span>🖼️</span> <span id="stat-photos-count">Mis Fotos (0/41)</span>
+        </button>
+        <button id="btn-quick-export-header" type="button" onclick="exportHtmlWithEmbeddedPhotos()" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold shadow-sm transition" title="Descargar index.html con tus fotos incrustadas para subir a GitHub y compartir">
+          <span>💾</span> <span>Exportar p/ compartir</span>
+        </button>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-clinical-50 dark:bg-cyan-950/60 text-clinical-700 dark:text-cyan-300 text-xs font-bold border border-clinical-200/70 dark:border-cyan-800/60" title="Experiencia acumulada">
+          <span>⚡</span> <span id="stat-xp">0</span> XP
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 text-xs font-bold border border-amber-200/70 dark:border-amber-800/60" title="Racha de aciertos">
+          <span>🔥</span> <span id="stat-streak">0</span>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-200/70 dark:border-emerald-800/60" title="Patologías dominadas">
+          <span>🎓</span> <span id="stat-mastered">0 / 41</span>
+        </div>
+        <button id="btn-dark-mode" type="button" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-clinical-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-base transition" title="Alternar Modo Oscuro / Claro" aria-label="Alternar Modo Oscuro">
+          🌙
+        </button>
+        <button id="btn-reset-modal" type="button" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-rose-950 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-base transition" title="Reiniciar progreso" aria-label="Reiniciar progreso">
+          🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra global de dominio -->
+    <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+      <div id="mastery-progress-fill" class="h-full bg-gradient-to-r from-clinical-600 to-emerald-500 transition-all duration-500" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       CONTENIDO PRINCIPAL
+       ======================================================================== -->
+  <main class="max-w-7xl mx-auto px-4 py-5 pb-16">
+    <!-- Filtro por Unidad Temática -->
+    <section class="mb-4" aria-label="Filtro por Unidad Temática">
+      <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+        <span>Unidades Temáticas (7 Bloques)</span>
+        <span id="unit-count-label" class="text-clinical-600 dark:text-cyan-400">Mostrando: 41 patologías</span>
+      </div>
+      <div id="unit-pills-container" class="flex gap-2 overflow-x-auto pb-2 thin-scroll"></div>
+    </section>
+
+    <!-- Navegación de 8 Modos Didácticos y Visuales -->
+    <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6" aria-label="Herramientas de estudio">
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="quiz">
+        <span class="text-lg">📝</span>
+        <span>Quiz Examen</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="hangman">
+        <span class="text-lg">🔤</span>
+        <span>Adivina Palabra</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="flashcards">
+        <span class="text-lg">🗂️</span>
+        <span>Flashcards</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="cases">
+        <span class="text-lg">🩺</span>
+        <span>Casos Clínicos</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="match">
+        <span class="text-lg">🔗</span>
+        <span>Conecta Pares</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="maps">
+        <span class="text-lg">🗺️</span>
+        <span>Mapas Conceptuales</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="synoptic">
+        <span class="text-lg">🌿</span>
+        <span>Cuadros Sinópticos</span>
+      </button>
+      <button type="button" class="mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition" data-tab="guide">
+        <span class="text-lg">📚</span>
+        <span>Guía Rápida</span>
+      </button>
+    </nav>
+
+    <!-- Contenedor Principal de Vistas -->
+    <section id="view-container"></section>
+  </main>
+
+  <!-- Modal Visor Visual Ampliado (para Cuadros Sinópticos y Mapas) -->
+  <div id="visual-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl animate-fade-in">
+      <div class="flex items-start justify-between gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <span id="vm-cat" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-clinical-100 text-clinical-700 dark:bg-cyan-950 dark:text-cyan-300 mb-1"></span>
+          <h3 id="vm-title" class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white"></h3>
+        </div>
+        <button id="btn-close-visual-modal" type="button" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-rose-950 text-slate-600 dark:text-slate-300 font-bold flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+      <div id="vm-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal Gestor de Fotos Clínicas (41 Patologías) y Exportación -->
+  <div id="photos-manager-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-2xl max-w-4xl w-full min-h-[340px] max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 mb-1">
+            Galería Personalizable (1 a 41) y Exportación para GitHub
+          </span>
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
+            🖼️ Fotos Clínicas de las 41 Patologías
+          </h3>
+        </div>
+        <button id="btn-close-photos-modal" type="button" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-rose-950 text-slate-600 dark:text-slate-300 font-bold flex items-center justify-center shrink-0">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-clinical-50 dark:bg-slate-800/80 border border-clinical-200 dark:border-slate-700 mb-4 text-xs sm:text-sm space-y-1.5">
+        <p class="font-bold text-clinical-700 dark:text-cyan-300">
+          ¿Cómo hacer que tus compañeras también vean las fotos en el enlace?
+        </p>
+        <p class="text-slate-700 dark:text-slate-300">
+          <strong>1. Si tú ya ves tus fotos aquí pero otra persona no:</strong> Es porque tus fotos están guardadas en la memoria local de <em>tu</em> navegador. Presiona <strong>"💾 Descargar index.html con fotos incrustadas"</strong> y sube ese archivo <code>index.html</code> a tu repositorio de GitHub (reemplazando el anterior) para que todos las vean.
+        </p>
+        <p class="text-slate-700 dark:text-slate-300">
+          <strong>2. Subida desde tu dispositivo:</strong> Usa <strong>"📂 Subir varias fotos (1–41)"</strong> para cargar todas juntas o <strong>"📸 Agregar foto"</strong> en cada patología antes de descargar el archivo.
+        </p>
+        <p id="photos-missing-summary" class="text-xs font-bold text-amber-700 dark:text-amber-300 pt-1"></p>
+      </div>
+
+      <!-- Acciones masivas y buscador -->
+      <div class="flex flex-wrap items-center justify-between gap-2.5 mb-4">
+        <div class="relative flex-1 min-w-[200px]">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+          <input id="photos-modal-search" type="text" placeholder="Filtrar patología por nombre o número (1–41)..." class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs sm:text-sm outline-none focus:border-clinical-600" />
+        </div>
+
+        <button type="button" onclick="detectRepoFolderPhotos(true)" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs sm:text-sm font-bold shadow transition">
+          <span>🔄 Buscar en GitHub</span>
+        </button>
+
+        <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white text-xs sm:text-sm font-bold shadow transition">
+          <span>📂 Subir varias fotos (1–41)</span>
+          <input type="file" accept="image/*" multiple onchange="handleBulkUserPhotosUpload(this)" class="hidden" />
+        </label>
+
+        <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-bold shadow transition" title="Extrae fotos incrustadas de un archivo HTML descargado previamente">
+          <span>📥 Recuperar de HTML anterior</span>
+          <input type="file" accept=".html,.htm,text/html" onchange="importPhotosFromPreviousHtml(this)" class="hidden" />
+        </label>
+
+        <button id="btn-export-html-with-photos" type="button" onclick="exportHtmlWithEmbeddedPhotos()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow transition">
+          <span>💾 Descargar index.html con fotos incrustadas</span>
+        </button>
+      </div>
+
+      <!-- Lista de las 41 patologías -->
+      <div id="photos-manager-table" class="space-y-2.5"></div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmación de Reinicio -->
+  <div id="reset-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl animate-fade-in">
+      <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-2">🔄 ¿Reiniciar progreso de estudio?</h3>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4">
+        Se reiniciarán tus puntos XP, racha y patologías marcadas como dominadas. Tus fotografías guardadas se conservarán intactas.
+      </p>
+      <div class="flex justify-end gap-2">
+        <button id="btn-cancel-reset" type="button" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">Cancelar</button>
+        <button id="btn-confirm-reset" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold">Sí, reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visor Lightbox para ver cualquier fotografía en su tamaño completo -->
+  <div id="photo-lightbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center justify-center animate-fade-in">
+      <div class="w-full flex items-center justify-between gap-3 mb-3 px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white">
+        <span id="lightbox-title" class="text-xs sm:text-sm font-extrabold truncate">Fotografía Clínica</span>
+        <button id="btn-close-lightbox" type="button" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-bold shrink-0">
+          ✕ Cerrar
+        </button>
+      </div>
+      <div class="overflow-auto max-h-[82vh] w-full flex items-center justify-center rounded-2xl bg-slate-900/60 border border-slate-800 p-2">
+        <img id="lightbox-img" src="" alt="Vista completa" class="max-w-full w-auto h-auto object-contain rounded-xl shadow-2xl" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de Notificaciones Toast -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <script>
+    /* ==========================================================================
+       1. CATEGORÍAS (7 UNIDADES) Y BASE DE DATOS DE 41 PATOLOGÍAS
+       ========================================================================== */
+    const CATEGORIES = [
+      { id: "all", name: "Todas (41)" },
+      { id: "Lesiones Epiteliales y del Tejido Conjuntivo", name: "1. Epiteliales y T. Conjuntivo" },
+      { id: "Lesiones Vasculares", name: "2. Vasculares" },
+      { id: "Lesiones Nerviosas", name: "3. Nerviosas" },
+      { id: "Lesiones Pigmentadas", name: "4. Pigmentadas" },
+      { id: "Glándulas Salivales y Trastornos Inmunitarios", name: "5. Salivales y Sjögren" },
+      { id: "Quistes Odontogénicos", name: "6. Quistes Odontogénicos" },
+      { id: "Tumores Odontogénicos", name: "7. Tumores Odontogénicos" }
+    ];
+
+    /* Diccionario donde se incrustan las fotos al descargar index.html autocontenido */
+    const EMBEDDED_USER_PHOTOS = {};
+
+    const VISUAL_ASSETS = {
+      1: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Verrucous_carcinoma_-_high_mag.jpg?width=640",
+        realCaption: "Referencia clínica / H&E: Proliferación epitelial exofítica papilomatosa con acantosis marcada (Carcinoma Verrugoso - VPH 16/18).",
+        fallbackType: "clinical",
+        fallbackLabel: "Placa blanca gruesa exofítica en 'coliflor' (Mandíbula anterior)",
+        aiCaption: "Esquema Didáctico: Placa hiperqueratósica exofítica tipo 'coliflor' asociada a VPH 16/18 en hombres ~55 años."
+      },
+      2: {
+        repoCandidates: ["img/01-fibroma.png", "img/2.jpg", "img/2.png", "img/1.jpg", "img/1.png"],
+        realCaption: "Agrandamiento nodular liso rosado < 1.5 cm en encía/mucosa por trauma crónico.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo liso rosado < 1.5 cm medido con sonda periodontal",
+        aiCaption: "Esquema Didáctico: Proliferación reactiva benigna de tejido conjuntivo denso por trauma crónico (< 1.5 cm, base sésil)."
+      },
+      3: {
+        repoCandidates: ["img/02-epulis-fisurado.jpg", "img/3.jpg", "img/3.png", "img/2.jpg", "img/2.png"],
+        realCaption: "Pliegue doble de tejido fibroso rosado firme en fondo de saco vestibular asociado a prótesis desajustada.",
+        fallbackType: "clinical",
+        fallbackLabel: "Pliegue doble fibroso en fondo de saco vestibular superior",
+        aiCaption: "Esquema Didáctico: Flanco de prótesis desajustada generando pliegues fibrosos múltiples con surco eritematoso."
+      },
+      4: {
+        repoCandidates: ["img/03-hiperplasia-papilar.png", "img/4.jpg", "img/4.png", "img/3.jpg", "img/3.png"],
+        realCaption: "Múltiples proyecciones papilares eritematosas agrupadas en paladar duro bajo prótesis total.",
+        fallbackType: "clinical",
+        fallbackLabel: "Proyecciones papilares eritematosas en paladar duro",
+        aiCaption: "Esquema Didáctico: Paladar duro con proyecciones papilares inflamatorias por uso de prótesis 24 hrs y mala higiene."
+      },
+      5: {
+        repoCandidates: ["img/04-granuloma-celulas-gigantes.png", "img/5.jpg", "img/5.png", "img/4.jpg", "img/4.png"],
+        realCaption: "Nódulo sésil rojo-violáceo exclusivo de encía y reborde alveolar desdentado.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo sésil rojo-violáceo en encía mandibular posterior",
+        aiCaption: "Esquema Didáctico: Lesión reactiva exclusiva de encía/reborde desdentado con células gigantes multinucleadas."
+      },
+      6: {
+        repoCandidates: ["img/05-fibroma-osificante.png", "img/6.jpg", "img/6.png", "img/5.jpg", "img/5.png"],
+        realCaption: "Masa nodular exofítica firme originada en la papila interdental con desplazamiento dental.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo exofítico en papila interdental anterior superior",
+        aiCaption: "Esquema Didáctico: Nódulo gingival emergiendo de papila interdental con focos radiopacos internos (16% recurrencia)."
+      },
+      7: {
+        repoCandidates: ["img/06-varices-sublinguales.jpg", "img/7.jpg", "img/7.png", "img/6.jpg", "img/6.png"],
+        realCaption: "Múltiples dilataciones venosas tortuosas azuladas-violáceas en la cara ventral de la lengua.",
+        fallbackType: "clinical",
+        fallbackLabel: "Dilataciones venosas tortuosas azuladas en vientre lingual",
+        aiCaption: "Esquema Didáctico: Venas sublinguales dilatadas por pérdida de soporte conjuntivo en >60 años (2/3; sin tratamiento)."
+      },
+      8: {
+        repoCandidates: ["img/07-granuloma-piogeno.jpg", "img/8.jpg", "img/8.png", "img/7.jpg", "img/7.png"],
+        realCaption: "Masa lobulada rojo intenso brillante con superficie ulcerada y sangrado fácil en encía anterior.",
+        fallbackType: "clinical",
+        fallbackLabel: "Masa lobulada rojo brillante ulcerada en encía anterior",
+        aiCaption: "Esquema Didáctico: Proliferación capilar lobular (75% encía anterior, 'Tumor del embarazo') con sangrado indoloro."
+      },
+      9: {
+        repoCandidates: ["img/08-hemangioma.jpg", "img/9.jpg", "img/9.png", "img/8.jpg", "img/8.png"],
+        realCaption: "Aumento de volumen vascular submucoso azulado-violáceo que blanquea a la diascopía.",
+        fallbackType: "clinical",
+        fallbackLabel: "Aumento vascular submucoso azulado en vestíbulo anterior",
+        aiCaption: "Esquema Didáctico: Prueba de diascopía positiva (isquemia al presionar) y respuesta a agentes esclerosantes."
+      },
+      10: {
+        repoCandidates: ["img/09-linfangioma.jpg", "img/10.jpg", "img/10.png", "img/9.jpg", "img/9.png"],
+        realCaption: "Agrupación de vesículas translúcidas y rosadas en dorso anterior de lengua ('huevos de rana').",
+        fallbackType: "clinical",
+        fallbackLabel: "Vesículas translúcidas 'huevos de rana' en lengua anterior",
+        aiCaption: "Esquema Didáctico: Vesículas linfáticas superficiales tipo 'huevos de rana' (NO responde a esclerosantes)."
+      },
+      11: {
+        repoCandidates: ["img/10-neuroma-traumatico.jpg", "img/11.jpg", "img/11.png", "img/10.jpg", "img/10.png"],
+        realCaption: "Nódulo rosado bien circunscrito de superficie lisa no ulcerada tras trauma o cirugía.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo rosado circunscrito liso en borde lateral de lengua",
+        aiCaption: "Esquema Didáctico: Proliferación reactiva de axones tras trauma/cirugía; solo 1/3 de los casos presentan dolor."
+      },
+      12: {
+        realCaption: "Nódulo submucoso sésil <= 2 cm rosado o amarillento en superficie dorsal de la lengua.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo sésil rosado-amarillento <= 2 cm en dorso de lengua",
+        aiCaption: "Esquema Didáctico: Derivado de células de Schwann (antes 'mioblastoma de células granulares') en dorso lingual."
+      },
+      13: {
+        realCaption: "Nódulo submucoso encapsulado de crecimiento lento en lengua (células de Schwann).",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo submucoso encapsulado bien delimitado en lengua",
+        aiCaption: "Esquema Didáctico: Neoplasia benigna encapsulada productora de mielina; aumento súbito = hemorragia intralesional."
+      },
+      14: {
+        realCaption: "Nódulo submucoso asintomático de crecimiento lento en lengua o mucosa yugal.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo submucoso indoloro en mucosa yugal / lengua",
+        aiCaption: "Esquema Didáctico: Proliferación de células de Schwann y fibroblastos perineurales (múltiple = Neurofibromatosis AD)."
+      },
+      15: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Physiologic_pigmentation.jpg?width=640",
+        realCaption: "Referencia clínica: Bandas difusas simétricas y bilaterales color café en encía adherida (Melanosis fisiológica/racial).",
+        fallbackType: "clinical",
+        fallbackLabel: "Pigmentación café bilateral y simétrica en encía adherida",
+        aiCaption: "Esquema Didáctico: Incremento fisiológico de melanina en la capa basal del epitelio; no requiere biopsia."
+      },
+      16: {
+        realCaption: "Máculas planas café oscuro/grisáceo asimétricas en encía anterior asociadas a tabaquismo.",
+        fallbackType: "clinical",
+        fallbackLabel: "Máculas café difusas en encía anterior (Melanosis del fumador)",
+        aiCaption: "Esquema Didáctico: Estimulación melanocítica defensiva por químicos del tabaco (frecuente en mujeres fumadoras)."
+      },
+      17: {
+        realCaption: "Melanosis en parches mucocutáneos por insuficiencia suprarrenal (cortisol bajo y ACTH elevada).",
+        fallbackType: "clinical",
+        fallbackLabel: "Pigmentación mucocutánea en parches (Enfermedad de Addison)",
+        aiCaption: "Esquema Didáctico: Destrucción de corteza adrenal -> ACTH elevada -> melanogénesis; desaparece con esteroides."
+      },
+      18: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Peutz-Jeghers_syndrome_lips.jpg?width=640",
+        realCaption: "Referencia clínica: Múltiples máculas melanóticas (efélides/pecas) en bermellón labial y piel perioral.",
+        fallbackType: "clinical",
+        fallbackLabel: "Efélides (pecas) en bermellón labial y región perioral",
+        aiCaption: "Esquema Didáctico: Herencia autosómica dominante que asocia efélides periorales con poliposis hamartomatosa intestinal."
+      },
+      19: {
+        realCaption: "Máculas melanóticas en mucosa yugal y labios acompañadas de melanoniquia longitudinal en uñas.",
+        fallbackType: "clinical",
+        fallbackLabel: "Máculas orales + melanoniquia en uñas (sin pólipos GI)",
+        aiCaption: "Esquema Didáctico: Pigmentación mucocutánea idiopática adquirida en adultos ~50 años (mujeres 2:1) sin pólipos."
+      },
+      20: {
+        realCaption: "Pigmentación plana difusa en paladar duro asociada a antipalúdicos (AR/lupus) o minociclina.",
+        fallbackType: "clinical",
+        fallbackLabel: "Pigmentación plana difusa azul-negra en paladar duro",
+        aiCaption: "Esquema Didáctico: Fármacos de artritis reumatoide/lupus pigmentan paladar duro; minociclina da tono azul-negro."
+      },
+      21: {
+        realCaption: "Mácula melanótica única plana < 1 cm de bordes bien definidos en bermellón del labio inferior.",
+        fallbackType: "clinical",
+        fallbackLabel: "Mácula única café bien delimitada < 1 cm en labio inferior",
+        aiCaption: "Esquema Didáctico: Hiperpigmentación focal benigna por aumento de melanina tras trauma en labio inferior."
+      },
+      22: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Amalgam_tattoo.jpg?width=640",
+        realCaption: "Referencia clínica: Mácula plana gris-azulada bien delimitada en mucosa alveolar adyacente a restauración metálica.",
+        fallbackType: "clinical",
+        fallbackLabel: "Mácula gris-azulada <= 6 mm junto a restauración metálica",
+        aiCaption: "Esquema Didáctico: Implantación exógena de partículas de amalgama visibles como diminutos puntos radiopacos en Rx."
+      },
+      23: {
+        realCaption: "Lesión café plana o elevada de rápido crecimiento en mucosa yugal que simula melanoma.",
+        fallbackType: "clinical",
+        fallbackLabel: "Lesión café de rápido crecimiento en mucosa yugal",
+        aiCaption: "Esquema Didáctico: Entidad reactiva benigna de rápido crecimiento que exige biopsia para descartar melanoma."
+      },
+      24: {
+        realCaption: "Mácula o pápula pigmentada bien definida < 6 mm en paladar duro o encía (nevo azul por efecto Tyndall).",
+        fallbackType: "clinical",
+        fallbackLabel: "Pápula azul-café bien delimitada < 6 mm en paladar duro",
+        aiCaption: "Esquema Didáctico: Proliferación benigna de células névicas; el nevo azul debe su color al efecto óptico Tyndall."
+      },
+      25: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Oral_melanoma.jpg?width=640",
+        realCaption: "Referencia clínica: Lesión pigmentada maligna asimétrica en paladar duro con bordes irregulares y heterogeneidad cromática.",
+        fallbackType: "clinical",
+        fallbackLabel: "Placa/masa asimétrica heterogénea en paladar duro (ABCDE)",
+        aiCaption: "Esquema Didáctico: Regla clínica ABCDE (Asimetría, Bordes irregulares, Color heterogéneo, Diámetro, Evolución)."
+      },
+      26: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Mucocele_lower_lip.jpg?width=640",
+        realCaption: "Referencia clínica: Nódulo fluctuante azulado translúcido en mucosa labial inferior lateral a la línea media.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo fluctuante azulado en labio inferior (lateral a línea media)",
+        aiCaption: "Esquema Didáctico: Ruptura traumática del conducto salival con extravasación de mucina SIN revestimiento epitelial."
+      },
+      27: {
+        realCaption: "Aumento de volumen quístico de crecimiento lento en piso de boca o mucosa yugal revestido por epitelio.",
+        fallbackType: "clinical",
+        fallbackLabel: "Quiste salival verdadero revestido por epitelio ductal",
+        aiCaption: "Esquema Didáctico: Obstrucción ductal salival CON revestimiento epitelial (a diferencia del mucocele)."
+      },
+      28: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ranula.jpg?width=640",
+        realCaption: "Referencia clínica: Tumefacción fluctuante azul-violácea unilateral en piso de boca que eleva la lengua.",
+        fallbackType: "clinical",
+        fallbackLabel: "Aumento de volumen fluctuante azulado en piso de boca",
+        aiCaption: "Esquema Didáctico: Extravasación/retención de la glándula sublingual en piso de boca ('vientre de rana')."
+      },
+      29: {
+        realCaption: "Úlcera profunda necrótica en cráter (1-3 cm) en paladar duro unilateral por isquemia salival.",
+        fallbackType: "clinical",
+        fallbackLabel: "Úlcera profunda en cráter en paladar duro unilateral",
+        aiCaption: "Esquema Didáctico: Necrosis isquémica de glándulas salivales palatinas que simula carcinoma; cura espontáneamente."
+      },
+      30: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Sjogren%27s_syndrome_-_high_mag.jpg?width=640",
+        realCaption: "Referencia histopatológica: Sialoadenitis linfocítica focal (>50 linfocitos por foco, Focus Score >= 1) en glándula salival menor.",
+        fallbackType: "histo",
+        fallbackLabel: "Infiltrado linfocítico focal peri-ductal (Focus Score >= 1)",
+        aiCaption: "Esquema Didáctico: Tríada diagnóstica de Sjögren (Xerostomía + Xeroftalmía + Anti-Ro/SS-A y Anti-La/SS-B)."
+      },
+      31: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Radicular_cyst_radiograph.jpg?width=640",
+        realCaption: "Referencia radiográfica: Área radiolúcida periapical bien circunscrita por halo cortical radiopaco en diente no vital.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez periapical redonda con halo radiopaco (Diente no vital)",
+        aiCaption: "Esquema Didáctico: Necrosis pulpar -> estímulo de restos de Malassez -> cavidad quística periapical con halo radiopaco."
+      },
+      32: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Dentigerous_cyst.jpg?width=640",
+        realCaption: "Referencia radiográfica: Radiolucidez unilocular pericoronaria bien definida rodeando la corona de un molar retenido.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez unilocular rodeando corona (Unión amelocementaria)",
+        aiCaption: "Esquema Didáctico: Acumulación de líquido entre epitelio reducido del esmalte y corona, anclado exactamente en la UAC."
+      },
+      33: {
+        realCaption: "Aumento de volumen blando fluctuante azulado o rojo-morado sobre la corona de un diente en erupción.",
+        fallbackType: "clinical",
+        fallbackLabel: "Hematoma / quiste blando azulado sobre diente en erupción",
+        aiCaption: "Esquema Didáctico: Variante extraósea de tejidos blandos del quiste dentígero; se rompe espontáneamente al erupcionar."
+      },
+      34: {
+        realCaption: "Zona radiolúcida unilocular bien definida en la cara lateral de la raíz de premolares inferiores vitales.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez unilocular lateral a raíz (Diente vecino VITAL)",
+        aiCaption: "Esquema Didáctico: Quiste del desarrollo lateral a premolares inferiores con vitalidad pulpar conservada."
+      },
+      35: {
+        realCaption: "Pápula o nódulo pequeño blanco-azulado en encía adherida o papila de canino/premolar mandibular.",
+        fallbackType: "clinical",
+        fallbackLabel: "Nódulo pequeño blanco-azulado en encía de premolar inferior",
+        aiCaption: "Esquema Didáctico: Contraparte gingival extraósea del quiste periodontal lateral sin afectación ósea en Rx."
+      },
+      36: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Odontogenic_keratocyst_-_high_mag.jpg?width=640",
+        realCaption: "Referencia histopatológica: Epitelio escamoso estratificado paraqueratinizado de espesor uniforme con empalizada basal.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez multilocular en rama mandibular + queratina amarilla",
+        aiCaption: "Esquema Didáctico: Crecimiento medular en rama mandibular + punción exploratoria aspirando queratina amarilla cremosa."
+      },
+      37: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ameloblastoma_-_panoramic_radiograph.jpg?width=640",
+        realCaption: "Referencia radiográfica: Lesión radiolúcida multilocular expansiva en cuerpo y rama mandibular ('pompas de jabón').",
+        fallbackType: "rx",
+        fallbackLabel: "Imagen multilocular en 'pompas de jabón' / 'panal de abejas'",
+        aiCaption: "Esquema Didáctico: Patrón en 'pompas de jabón' en mandíbula posterior (80%), expansión cortical y mutación BRAF V600E."
+      },
+      38: {
+        realCaption: "Radiolucidez unilocular característica de forma TRIANGULAR entre las raíces de dientes adyacentes.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez unilocular TRIANGULAR entre raíces",
+        aiCaption: "Esquema Didáctico: Tumor odontogénico epitelial benigno raro en jóvenes con defecto óseo triangular interradicular."
+      },
+      39: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Calcifying_epithelial_odontogenic_tumor_-_high_mag.jpg?width=640",
+        realCaption: "Referencia histopatológica: Láminas de células epiteliales poliédricas con depósito de proteína amiloide y calcificaciones.",
+        fallbackType: "rx",
+        fallbackLabel: "Lesión mixta radiolúcida-radiopaca (Proteína amiloide calcificada)",
+        aiCaption: "Esquema Didáctico: Tumor de Pindborg con secreción de proteína amiloide calcificada y focos radiopacos internos."
+      },
+      40: {
+        realUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Adenomatoid_odontogenic_tumor_-_high_mag.jpg?width=640",
+        realCaption: "Referencia histopatológica: Estructuras ductales características rodeadas por células epiteliales fusiformes en roseta.",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez pericoronaria sobrepasa UAC en canino superior (60%)",
+        aiCaption: "Esquema Didáctico: 'Tumor de los 2/3' asociado a canino maxilar retenido (60%), con estructuras ductales."
+      },
+      41: {
+        realCaption: "Radiolucidez uni o multilocular bien definida en mandíbula posterior asociada a diente retenido en jóvenes (~15 años).",
+        fallbackType: "rx",
+        fallbackLabel: "Radiolucidez mandibular posterior en joven (~15 años) sin tejido duro",
+        aiCaption: "Esquema Didáctico: Tumor mixto benigno (ectomesénquima + epitelio odontogénico) sin formación de tejido duro."
+      }
+    };
+
+    const PATHOLOGIES = [
+      // --- UNIDAD 1: LESIONES EPITELIALES Y DEL TEJIDO CONJUNTIVO (6) ---
+      {
+        id: 1,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Carcinoma Verrugoso / Papiloma por VPH",
+        hangmanWord: "CARCINOMA VERRUGOSO",
+        etiology: "Asociado a VPH tipos 16 y 18. Predilección por hombres, promedio 55 años.",
+        location: "Parte anterior de la mandíbula, mucosa yugal, lengua y paladar duro.",
+        clinical: "Placa gruesa bien delimitada, asintomática, con superficie exofítica en aspecto de 'coliflor'.",
+        radiographic: "Sin compromiso óseo inicial (erosión superficial por presión solo en lesiones muy extensas).",
+        treatment: "Tratamiento quirúrgico. Metástasis poco frecuente; 90% libre de enfermedad a los 5 años.",
+        examTip: "Aspecto de 'coliflor' + VPH 16 y 18 + hombres de 55 años + 90% libre de enfermedad a 5 años.",
+        alerts: ["maligno", "dato-examen"]
+      },
+      {
+        id: 2,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Fibroma / Hiperplasia Fibrosa",
+        hangmanWord: "HIPERPLASIA FIBROSA",
+        etiology: "Proliferación reactiva benigna de tejido conjuntivo por trauma o irritación crónica.",
+        location: "Mucosa labial, mucosa yugal, lengua y encía.",
+        clinical: "Nódulo de superficie lisa, color de la mucosa adyacente o blanco (si hay hiperqueratosis), base sésil, < 1.5 cm, asintomático. 4ta-6ta década.",
+        radiographic: "Sin alteraciones óseas.",
+        treatment: "Cirugía conservativa; muy baja recurrencia.",
+        examTip: "Nódulo liso sésil < 1.5 cm por trauma crónico; color blanco cuando presenta hiperqueratosis.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 3,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Épulis Fisurado",
+        hangmanWord: "EPULIS FISURADO",
+        etiology: "Hiperplasia fibrosa inflamatoria reactiva causada por prótesis dental mal ajustada.",
+        location: "Mucosa alveolar vestibular (fondo de saco donde encaja el borde de la dentadura).",
+        clinical: "Tejido hiperplásico doblado en pliegues múltiples firmes y fibrosos con surco eritematoso y ulcerado, > 1 cm. Adultos mayores.",
+        radiographic: "Sin hallazgos óseos.",
+        treatment: "Remoción quirúrgica de los pliegues + ajuste o confección de nueva prótesis.",
+        examTip: "Pliegues múltiples firmes en mucosa alveolar vestibular donde se fija la dentadura mal ajustada.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 4,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Hiperplasia Papilar Inflamatoria",
+        hangmanWord: "HIPERPLASIA PAPILAR",
+        etiology: "Prótesis desajustada, mala higiene y uso de prótesis 24 horas (incluso durante la noche).",
+        location: "Paladar duro (exactamente debajo de la base de la prótesis).",
+        clinical: "Asintomática, mucosa eritematosa con superficie papilar / aframbuesada.",
+        radiographic: "Sin alteraciones óseas.",
+        treatment: "Retiro nocturno de prótesis, higiene, antifúngicos si hay candidiasis y cirugía/rebasado.",
+        examTip: "Uso de prótesis 24 horas (también en la noche) + superficie papilar eritematosa en paladar duro.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 5,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Granuloma Periférico de Células Gigantes",
+        hangmanWord: "GRANULOMA DE CELULAS GIGANTES",
+        etiology: "Lesión reactiva crónica causada por trauma ('granuloma periférico de células gigantes de reparación'). Histología: eritrocitos extravasados, monocitos y células gigantes multinucleadas.",
+        location: "Exclusivamente en encía y reborde alveolar desdentado.",
+        clinical: "Nódulo rojo-morado o azulado < 2 cm, mayormente sésil (a veces pediculado), asintomático. 6ta década de vida.",
+        radiographic: "Puede provocar resorción superficial en 'copa' del hueso alveolar subyacente.",
+        treatment: "Excisión quirúrgica profunda hasta el hueso subyacente.",
+        examTip: "Exclusivo de encía/reborde desdentado, color rojo-morado/azulado, excisión hasta hueso subyacente.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 6,
+        category: "Lesiones Epiteliales y del Tejido Conjuntivo",
+        name: "Fibroma Osificante Periférico",
+        hangmanWord: "FIBROMA OSIFICANTE PERIFERICO",
+        etiology: "Lesión reactiva gingival (granuloma fibroblástico calcificante) con tejido conjuntivo y material mineralizado tipo hueso o cemento.",
+        location: "Exclusivamente en encía (crece desde la papila interdental).",
+        clinical: "Nódulo sésil o pediculado rojo/rosa con superficie frecuentemente ulcerada, < 2 cm, desplaza órganos dentarios. Pacientes jóvenes.",
+        radiographic: "Pequeñas áreas radiopacas focales que corresponden a calcificaciones.",
+        treatment: "Extirpación quirúrgica hasta el periostio + curetaje de piezas contiguas (16% de recurrencia).",
+        examTip: "Nace de papila interdental, desplaza dientes, tiene calcificaciones radiopacas y 16% de recurrencia.",
+        alerts: ["alta-recidiva", "signo-rx", "dato-examen"]
+      },
+
+      // --- UNIDAD 2: LESIONES VASCULARES (4) ---
+      {
+        id: 7,
+        category: "Lesiones Vasculares",
+        name: "Várices Linguales / Sublinguales",
+        hangmanWord: "VARICES LINGUALES",
+        etiology: "Venas anormalmente dilatadas y tortuosas por pérdida de soporte del tejido conjuntivo con la edad (asociado a hipertensión/problemas cardiovasculares).",
+        location: "Cara ventral de la lengua (sublingual).",
+        clinical: "Múltiples pápulas o cordones tortuosos de tono azulado, asintomáticas. Presentes en 2/3 de personas > 60 años.",
+        radiographic: "No aplica.",
+        treatment: "No requiere tratamiento (condición fisiológica de la edad).",
+        examTip: "Presente en 2/3 de adultos > 60 años en vientre de lengua; NO requiere tratamiento.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 8,
+        category: "Lesiones Vasculares",
+        name: "Granuloma Piógeno",
+        hangmanWord: "GRANULOMA PIOGENO",
+        etiology: "Irritación gingival, mala higiene y estímulo hormonal (embarazo). Proliferación de células endoteliales (hemangioma capilar lobular).",
+        location: "75% en encía región anterior (también lengua y mucosa yugal).",
+        clinical: "Nódulo lobulado, pediculado, rojo brillante o morado, superficie ulcerada, rápido crecimiento, sangra al cepillarse sin dolor. Predilección femenina ('Tumor del embarazo').",
+        radiographic: "Sin alteración ósea.",
+        treatment: "Extirpación quirúrgica + eliminar agente etiológico. Alta recurrencia.",
+        examTip: "Apodo 'Tumor del embarazo'; 75% en encía anterior, sangra fácil sin dolor y tiene alta recurrencia.",
+        alerts: ["alta-recidiva", "dato-examen"]
+      },
+      {
+        id: 9,
+        category: "Lesiones Vasculares",
+        name: "Hemangioma",
+        hangmanWord: "HEMANGIOMA",
+        etiology: "Proliferación benigna de células endoteliales (capilar, venoso o arteriovenoso; alto o bajo flujo).",
+        location: "60% en cabeza y cuello (labios, lengua, mucosa yugal).",
+        clinical: "Tumor más común de la infancia, más frecuente en mujeres; presente desde el nacimiento o primeras semanas. Rojo brillante (superficial) o azulado (profundo). 20% complica con ulceración/hemorragia; en cuello/laringe obstruye vía aérea.",
+        radiographic: "Posibles flebolitos en variantes cavernosas.",
+        treatment: "Dx por historia clínica, diascopía y aspiración. Tx: escleroterapia, láser, crioterapia o cirugía.",
+        examTip: "Tumor más común de la infancia; responde a diascopía y agentes esclerosantes.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 10,
+        category: "Lesiones Vasculares",
+        name: "Linfangioma",
+        hangmanWord: "LINFANGIOMA",
+        etiology: "Hamartoma/tumor benigno de vasos linfáticos (simple/capilar, cavernoso e higroma quístico).",
+        location: "50-75% en cabeza y cuello; intraoralmente en zona anterior de la lengua.",
+        clinical: "50% al nacimiento y 90% se desarrollan antes de los 2 años. Ocasiona macroglosia; superficie 'empedrada' con vesículas translúcidas tipo 'huevos de rana'.",
+        radiographic: "No aplica.",
+        treatment: "Quirúrgico (alta recidiva en cavernosos por ser infiltrativos). NO responde a agentes esclerosantes.",
+        examTip: "Superficie 'empedrada' / 'huevos de rana' + macroglosia + NO responde a esclerosantes.",
+        alerts: ["alta-recidiva", "dato-examen"]
+      },
+
+      // --- UNIDAD 3: LESIONES NERVIOSAS (4) ---
+      {
+        id: 11,
+        category: "Lesiones Nerviosas",
+        name: "Neuroma Traumático",
+        hangmanWord: "NEUROMA TRAUMATICO",
+        etiology: "Proliferación reactiva del tejido nervioso tras trauma/extracción/cirugía por regeneración axonal fallida.",
+        location: "Lengua y labio inferior (también intraóseo en mandíbula).",
+        clinical: "Nódulos de superficie lisa no ulcerados. Adultos jóvenes y mujeres. Solo 1/3 presentan dolor (incluso dolor irradiado).",
+        radiographic: "Los neuromas traumáticos intraóseos muestran un defecto radiolúcido.",
+        treatment: "Tratamiento quirúrgico; rara recidiva.",
+        examTip: "Regeneración axonal frustrada post-extracción; solo 1/3 presentan dolor.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 12,
+        category: "Lesiones Nerviosas",
+        name: "Tumor de Células Granulares",
+        hangmanWord: "TUMOR DE CELULAS GRANULARES",
+        etiology: "Neoplasia benigna de tejido blando derivada de células de Schwann (antes llamado 'mioblastoma de células granulares').",
+        location: "Sitio común: superficie dorsal de la lengua.",
+        clinical: "Nódulo asintomático de base sésil <= 2 cm, coloración rosada o amarillenta. Mujeres, 4ta-6ta década.",
+        radiographic: "No aplica.",
+        treatment: "Tratamiento quirúrgico conservador.",
+        examTip: "Superficie dorsal de lengua + nódulo rosado/amarillo <= 2 cm + antes llamado mioblastoma.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 13,
+        category: "Lesiones Nerviosas",
+        name: "Schwannoma (Neurilemoma)",
+        hangmanWord: "SCHWANNOMA",
+        etiology: "Neoplasia benigna neural encapsulada originada de células de Schwann (células gliales productoras de mielina).",
+        location: "Lengua es el sitio favorito (también paladar, piso de boca, mucosa bucal).",
+        clinical: "Nódulo submucoso encapsulado, asintomático, crecimiento lento (aumento súbito sugiere hemorragia intralesional).",
+        radiographic: "No aplica.",
+        treatment: "Tratamiento quirúrgico.",
+        examTip: "Tumor encapsulado de células productoras de mielina; crecimiento súbito = hemorragia intralesional.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 14,
+        category: "Lesiones Nerviosas",
+        name: "Neurofibroma Solitario",
+        hangmanWord: "NEUROFIBROMA SOLITARIO",
+        etiology: "Proliferación de células de Schwann y fibroblastos perineurales (si es múltiple forma parte de Neurofibromatosis hereditaria autosómica dominante).",
+        location: "Piel (más frecuente); en cavidad oral: lengua y mucosa yugal.",
+        clinical: "Nódulos submucosos asintomáticos de crecimiento lento en adultos jóvenes.",
+        radiographic: "No aplica.",
+        treatment: "Tratamiento quirúrgico.",
+        examTip: "Células de Schwann + fibroblastos perineurales; múltiples = Neurofibromatosis (AD).",
+        alerts: ["dato-examen"]
+      },
+
+      // --- UNIDAD 4: LESIONES PIGMENTADAS (11) ---
+      {
+        id: 15,
+        category: "Lesiones Pigmentadas",
+        name: "Melanosis Racial / Fisiológica",
+        hangmanWord: "MELANOSIS RACIAL",
+        etiology: "Incremento fisiológico de actividad melanocítica (aumento de melanina en capa basal del epitelio) en piel oscura/morena.",
+        location: "Principalmente encía adherida (también mucosa bucal, labios, paladar y lengua).",
+        clinical: "Múltiples máculas/placas difusas café o negro, bilaterales y simétricas.",
+        radiographic: "No aplica.",
+        treatment: "Diagnóstico por correlación clínica; no requiere biopsia ni tratamiento.",
+        examTip: "Placas café bilaterales y simétricas en encía adherida; NO requiere biopsia.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 16,
+        category: "Lesiones Pigmentadas",
+        name: "Melanosis del Fumador",
+        hangmanWord: "MELANOSIS DEL FUMADOR",
+        etiology: "Condición benigna reactiva: los químicos del tabaco estimulan melanocitos como defensa.",
+        location: "Encía anterior, labios, paladar duro y lengua.",
+        clinical: "Múltiples máculas planas color café oscuro/grisáceo, asimétricas. Frecuente en mujeres fumadoras.",
+        radiographic: "No aplica.",
+        treatment: "Suspender tabaco. Si la lesión es elevada o en localización inusual, hacer BIOPSIA.",
+        examTip: "Frecuente en mujeres fumadoras; si está elevada o en sitio inusual -> BIOPSIA.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 17,
+        category: "Lesiones Pigmentadas",
+        name: "Enfermedad de Addison",
+        hangmanWord: "ENFERMEDAD DE ADDISON",
+        etiology: "Destrucción de corteza adrenal -> déficit de cortisol -> hipófisis secreta ACTH -> ACTH promueve melanogénesis.",
+        location: "Múltiples sitios de mucosa oral y piel (bronceado).",
+        clinical: "Melanosis en parches mucocutáneos sin predilección de género.",
+        radiographic: "No aplica.",
+        treatment: "Terapia con esteroides (hace desaparecer la pigmentación en mucosa oral).",
+        examTip: "Déficit de cortisol + alta ACTH -> melanogénesis; desaparece con terapia de esteroides.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 18,
+        category: "Lesiones Pigmentadas",
+        name: "Síndrome de Peutz-Jeghers",
+        hangmanWord: "SINDROME DE PEUTZ JEGHERS",
+        etiology: "Afección hereditaria autosómica dominante.",
+        location: "Labios, piel perioral y mucosa yugal (+ tracto gastrointestinal).",
+        clinical: "Efélides (pecas) en labios y piel desde infancia/adolescencia + máculas intraorales + poliposis intestinal + riesgo de neoplasias (GI, tiroides, ovarios, testículos, páncreas).",
+        radiographic: "Pólipos intestinales en estudios digestivos.",
+        treatment: "Lesiones en boca no necesitan tratamiento, solo seguimiento.",
+        examTip: "Autosómico dominante: pecas periorales/labiales + pólipos intestinales + riesgo tumoral.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 19,
+        category: "Lesiones Pigmentadas",
+        name: "Síndrome de Laugier-Hunziker",
+        hangmanWord: "LAUGIER HUNZIKER",
+        etiology: "Pigmentación mucocutánea idiopática adquirida (sin pólipos ni enfermedad sistémica).",
+        location: "Mucosa yugal, labios, encía, paladar, lengua + uñas de manos y pies.",
+        clinical: "Adultos ~50 años, mujeres afectadas el doble que hombres (2:1). Múltiples máculas orales + melanoniquia (color oscuro en uñas).",
+        radiographic: "No aplica.",
+        treatment: "Condición benigna sin tratamiento.",
+        examTip: "Máculas orales + melanoniquia (uñas oscuras) en mujeres ~50 años, SIN pólipos intestinales.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 20,
+        category: "Lesiones Pigmentadas",
+        name: "Melanosis Farmacológica",
+        hangmanWord: "MELANOSIS FARMACOLOGICA",
+        etiology: "Inducción de síntesis de melanina o depósito de metabolitos: anticonceptivos/hormonas, quimioterapia, clofazimina, ketoconazol, fármacos para artritis reumatoide y lupus sistémico, minociclina.",
+        location: "Paladar duro, encía y mucosa yugal.",
+        clinical: "Mácula plana focal, multifocal o difusa (café, gris, azul o negra). Fármacos de AR/lupus pigmentan paladar duro; minociclina da color azul-negro.",
+        radiographic: "No aplica.",
+        treatment: "Desaparece al suspender el medicamento; biopsia necesaria en algunos casos.",
+        examTip: "Pigmentación en paladar duro por fármacos de Artritis Reumatoide/Lupus; minociclina da color negro.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 21,
+        category: "Lesiones Pigmentadas",
+        name: "Mácula Melanótica Oral",
+        hangmanWord: "MACULA MELANOTICA",
+        etiology: "Hiperpigmentación benigna por aumento de melanina (posterior a trauma).",
+        location: "Sitio más frecuente: bermellón del labio inferior (también encía, paladar, mucosa bucal).",
+        clinical: "Lesión única, plana, bordes bien definidos, < 1 cm, café oscuro. Ligera predilección femenina.",
+        radiographic: "No aplica.",
+        treatment: "Biopsia / seguimiento periódico.",
+        examTip: "Lesión única plana < 1 cm bien definida en bermellón del labio inferior.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 22,
+        category: "Lesiones Pigmentadas",
+        name: "Tatuaje por Amalgama",
+        hangmanWord: "TATUAJE POR AMALGAMA",
+        etiology: "Depósito exógeno en la mucosa de partículas de amalgama, tatuaje o grafito.",
+        location: "Encía, reborde alveolar y mucosa cercana a diente con restauración metálica.",
+        clinical: "Lesión plana grisácea, azulada o negra <= 6 mm, bordes bien definidos o difusos.",
+        radiographic: "Se observa como pequeños puntos radiopacos en la radiografía.",
+        treatment: "No requiere biopsia ni tratamiento (correlación clínica).",
+        examTip: "Mácula azul-gris <= 6 mm junto a restauración metálica + puntos radiopacos en Rx.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 23,
+        category: "Lesiones Pigmentadas",
+        name: "Melanoacantoma Oral",
+        hangmanWord: "MELANOACANTOMA",
+        etiology: "Entidad reactiva benigna poco frecuente asociada a trauma.",
+        location: "Mucosa yugal (más común), labio, paladar y encía.",
+        clinical: "Adultos en 3ra década. Lesión café plana o elevada de RÁPIDO crecimiento que semeja melanoma.",
+        radiographic: "No aplica.",
+        treatment: "BIOPSIA obligatoria para descartar melanoma; puede remitir con biopsia o esteroides tópicos.",
+        examTip: "Lesión café de RÁPIDO crecimiento en mucosa yugal que imita melanoma -> biopsia obligatoria.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 24,
+        category: "Lesiones Pigmentadas",
+        name: "Nevos (Lunar / Nevo Azul)",
+        hangmanWord: "NEVO AZUL",
+        etiology: "Lesión pigmentada congénita o adquirida compuesta por melanocitos / células névicas (unión, compuesto, intramucoso/intradérmico, azul).",
+        location: "Paladar duro y encía (nevo azul común también en manos, pies y cara).",
+        clinical: "Mácula o pápula bien definida < 6 mm. El nevo azul (2da-4ta década) es una pápula azul de lento crecimiento por el 'efecto Tyndall'.",
+        radiographic: "No aplica.",
+        treatment: "Biopsia excisional para descartar melanoma.",
+        examTip: "Nevo azul en paladar < 6 mm debe su color azul al 'efecto Tyndall'.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 25,
+        category: "Lesiones Pigmentadas",
+        name: "Melanoma de Mucosa Oral",
+        hangmanWord: "MELANOMA ORAL",
+        etiology: "Neoplasia maligna agresiva derivada de melanocitos (NO asociada a exposición solar en cavidad oral).",
+        location: "Paladar duro y reborde alveolar.",
+        clinical: "Hombres, 50-55 años. Regla ABCDE (Asimetría, Bordes irregulares, Color heterogéneo, Diámetro aumentado, Evolución). Fases radial y vertical.",
+        radiographic: "Destrucción ósea irregular en estadios avanzados.",
+        treatment: "Cirugía radical con márgenes amplios (hemimaxilectomía) + quimioterapia coadyuvante. Supervivencia a 5 años ~20%.",
+        examTip: "Paladar duro, regla ABCDE, no asociado al sol, supervivencia ~20% a 5 años.",
+        alerts: ["maligno", "dato-examen"]
+      },
+
+      // --- UNIDAD 5: GLÁNDULAS SALIVALES Y TRASTORNOS INMUNITARIOS (5) ---
+      {
+        id: 26,
+        category: "Glándulas Salivales y Trastornos Inmunitarios",
+        name: "Mucocele (Extravasación Mucosa)",
+        hangmanWord: "MUCOCELE",
+        etiology: "Ruptura traumática del conducto de glándula salival menor con extravasación de mucina. NO está revestido por epitelio.",
+        location: "Labio inferior (de forma lateral a la línea media); menos frecuente en piso de boca, vientre lingual y mucosa yugal.",
+        clinical: "Niños y adultos jóvenes. Nódulo fluctuante azulado o translúcido (1-2 mm a 2 cm) que se revienta y vuelve a llenarse.",
+        radiographic: "No aplica.",
+        treatment: "Remoción quirúrgica incluyendo glándulas salivales menores adyacentes para evitar recidivas.",
+        examTip: "NO está revestido por epitelio; labio inferior lateral a línea media por trauma.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 27,
+        category: "Glándulas Salivales y Trastornos Inmunitarios",
+        name: "Quiste por Retención Mucosa",
+        hangmanWord: "QUISTE DE RETENCION",
+        etiology: "Obstrucción ductal salival. A diferencia del mucocele, SÍ está revestido por epitelio (verdadero quiste).",
+        location: "Piso de boca, mucosa yugal, glándulas salivales mayores y menores.",
+        clinical: "Adultos, crecimiento lento, aumento de volumen asintomático parecido al mucocele.",
+        radiographic: "Posible sialolito radiopaco si la obstrucción es por cálculo.",
+        treatment: "Remoción quirúrgica.",
+        examTip: "A diferencia del mucocele, SÍ tiene revestimiento epitelial (quiste verdadero).",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 28,
+        category: "Glándulas Salivales y Trastornos Inmunitarios",
+        name: "Ránula",
+        hangmanWord: "RANULA",
+        etiology: "Mucocele de gran tamaño asociado a la glándula sublingual en el piso de la boca (del latín 'rana').",
+        location: "Exclusivamente en PISO DE BOCA.",
+        clinical: "Lesión fluctuante azulada o morada de gran tamaño que puede llegar a elevar la lengua.",
+        radiographic: "No aplica.",
+        treatment: "Remoción quirúrgica / marsupialización.",
+        examTip: "Mucocele en PISO DE BOCA asociado a glándula sublingual que eleva la lengua (del latín 'rana').",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 29,
+        category: "Glándulas Salivales y Trastornos Inmunitarios",
+        name: "Sialometaplasia Necrosante",
+        hangmanWord: "SIALOMETAPLASIA NECROSANTE",
+        etiology: "Inflamación destructiva por isquemia del tejido salival (trauma, dentaduras, cirugías, infecciones).",
+        location: "75% en paladar duro (2/3 unilateral).",
+        clinical: "Hombres, 40-50 años. Nódulo inflamatorio que en 2-3 semanas se necrosa dejando una úlcera profunda (1-3 cm) que asemeja proceso maligno.",
+        radiographic: "Puede ocasionar destrucción superficial del hueso palatino.",
+        treatment: "Biopsia para descartar cáncer; cura espontáneamente.",
+        examTip: "Úlcera profunda en cráter en paladar duro por isquemia que imita malignidad; requiere biopsia.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 30,
+        category: "Glándulas Salivales y Trastornos Inmunitarios",
+        name: "Síndrome de Sjögren",
+        hangmanWord: "SINDROME DE SJOGREN",
+        etiology: "Trastorno autoinmunitario crónico que destruye glándulas exocrinas salivales y lagrimales. Primario o secundario (asociado a Artritis Reumatoide o Lupus).",
+        location: "Glándulas salivales mayores y menores (biopsia en labio inferior) y glándulas lagrimales.",
+        clinical: "Mujeres adultas/mayores. Tríada: xerostomía (boca seca), xeroftalmía (queratoconjuntivitis seca) y autoanticuerpos Anti-Ro (SS-A) y Anti-La (SS-B). Lengua fisurada con atrofia papilar.",
+        radiographic: "Sialometría <= 1.5 ml/15 min; biopsia labial con sialoadenitis linfocítica focal (Focus Score >= 1).",
+        treatment: "Tratamiento paliativo: saliva artificial, chicles sin azúcar, fluoruros y sialogogos como pilocarpina.",
+        examTip: "Tríada: Xerostomía + Xeroftalmía + Anti-Ro (SS-A) y Anti-La (SS-B); Focus Score >= 1; Tx con pilocarpina.",
+        alerts: ["dato-examen"]
+      },
+
+      // --- UNIDAD 6: QUISTES ODONTOGÉNICOS (6) ---
+      {
+        id: 31,
+        category: "Quistes Odontogénicos",
+        name: "Quiste Radicular / Periapical (y Residual)",
+        hangmanWord: "QUISTE RADICULAR",
+        etiology: "Origen inflamatorio (>50% del total de quistes odontogénicos) derivado de restos epiteliales de Malassez por necrosis pulpar. Si persiste tras extraer el diente se denomina Quiste Residual.",
+        location: "Ápice radicular de cualquier diente desvitalizado (más frecuente en maxilar anterior).",
+        clinical: "Asintomático (salvo infección secundaria), expansión cortical en lesiones extensas, diente causal NO vital.",
+        radiographic: "Área radiolúcida periapical redonda bien circunscrita por un halo cortical radiopaco continuo con la lámina dura.",
+        treatment: "Endodoncia del diente causal o extracción con enucleación completa del quiste.",
+        examTip: ">50% de quistes odontogénicos; restos de Malassez; diente NO vital; halo cortical radiopaco.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 32,
+        category: "Quistes Odontogénicos",
+        name: "Quiste Dentígero (Folicular)",
+        hangmanWord: "QUISTE DENTIGERO",
+        etiology: "Segundo quiste odontogénico más común (17%). Acumulación de líquido entre el epitelio reducido del esmalte y la corona de un diente retenido.",
+        location: "Terceros molares inferiores y caninos superiores retenidos.",
+        clinical: "Pacientes jóvenes (10-30 años). Asintomático, asociado a ausencia clínica del diente permanente; puede expandir corticales y reabsorber raíces vecinas.",
+        radiographic: "Radiolucidez unilocular pericoronaria bien definida unida exactamente a la unión amelocementaria (UAC).",
+        treatment: "Enucleación quirúrgica junto con extracción del diente retenido (o marsupialización para permitir erupción).",
+        examTip: "17% de quistes; epitelio reducido del esmalte; anclado en la unión amelocementaria alrededor de la corona.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 33,
+        category: "Quistes Odontogénicos",
+        name: "Quiste de la Erupción",
+        hangmanWord: "QUISTE DE LA ERUPCION",
+        etiology: "Variante extraósea de tejidos blandos del quiste dentígero (epitelio reducido del esmalte sobre un diente en erupción).",
+        location: "Mucosa gingival alveolar que recubre la corona de un diente deciduo o permanente en erupción.",
+        clinical: "Niños (< 10 años). Aumento de volumen blando, fluctuante, translúcido o azul-violáceo ('hematoma de la erupción').",
+        radiographic: "Sin afectación ósea (el diente ya atravesó la cortical alveolar y está en tejido blando).",
+        treatment: "No requiere tratamiento; se rompe espontáneamente al erupcionar el diente.",
+        examTip: "Variante de tejido blando del quiste dentígero en niños; se rompe espontáneamente al erupcionar el diente.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 34,
+        category: "Quistes Odontogénicos",
+        name: "Quiste Periodontal Lateral (y Botrioide)",
+        hangmanWord: "QUISTE PERIODONTAL LATERAL",
+        etiology: "Quiste odontogénico del desarrollo originado de restos de la lámina dental (variante multilocular = Quiste Odontogénico Botrioide).",
+        location: "Región de premolares y caninos mandibulares (lateral a la raíz).",
+        clinical: "Adultos (5ta-7ma década), asintomático; los órganos dentarios adyacentes están VITALES.",
+        radiographic: "Zona radiolúcida unilocular bien definida en la cara lateral de la raíz (botrioide = aspecto en 'racimo de uvas').",
+        treatment: "Enucleación quirúrgica conservadora preservando los dientes vitales vecinos.",
+        examTip: "Lateral a raíz en premolares inferiores; dientes vecinos VITALES; variante multilocular = botrioide.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 35,
+        category: "Quistes Odontogénicos",
+        name: "Quiste Gingival del Adulto",
+        hangmanWord: "QUISTE GINGIVAL DEL ADULTO",
+        etiology: "Contraparte gingival extraósea del quiste periodontal lateral (restos de la lámina dental en encía).",
+        location: "Encía adherida o papila interdental vestibular de caninos y premolares mandibulares.",
+        clinical: "Adultos (40-60 años). Pápula o nódulo pequeño (< 6 mm), indoloro, blanco-azulado translúcido; dientes VITALES.",
+        radiographic: "Sin alteración ósea (ocasionalmente leve erosión superficial por presión).",
+        treatment: "Excisión quirúrgica local simple; no recidiva.",
+        examTip: "Contraparte extraósea del quiste periodontal lateral en encía de canino/premolar inferior con dientes vitales.",
+        alerts: ["dato-examen"]
+      },
+      {
+        id: 36,
+        category: "Quistes Odontogénicos",
+        name: "Queratoquiste Odontogénico (QQO)",
+        hangmanWord: "QUERATOQUISTE ODONTOGENICO",
+        etiology: "Derivado de restos de la lámina dental (mutación gen PTCH1). Múltiples QQO forman parte del Síndrome de Gorlin-Goltz.",
+        location: "Parte posterior del cuerpo y rama ascendente de la mandíbula (60-80%).",
+        clinical: "2da-3ra década. Crecimiento medular anteroposterior. Punción exploratoria aspira queratina amarilla cremosa.",
+        radiographic: "Radiolucidez uni o multilocular de bordes festoneados bien definidos en cuerpo/rama mandibular.",
+        treatment: "Enucleación + ostectomía periférica / solución de Carnoy o marsupialización. Alta tasa de recidiva (5-62%).",
+        examTip: "Rama mandibular + punción aspira queratina amarilla + Síndrome de Gorlin + alta recidiva (5-62%).",
+        alerts: ["alta-recidiva", "signo-rx", "dato-examen"]
+      },
+
+      // --- UNIDAD 7: TUMORES ODONTOGÉNICOS (5) ---
+      {
+        id: 37,
+        category: "Tumores Odontogénicos",
+        name: "Ameloblastoma",
+        hangmanWord: "AMELOBLASTOMA",
+        etiology: "Neoplasia odontogénica epitelial benigna pero localmente agresiva e infiltrante (mutación BRAF V600E en mandíbula).",
+        location: "80% en mandíbula posterior (región molar y rama ascendente).",
+        clinical: "Adultos (30-50 años). Expansión indolora de corticales con deformación facial y resorción radicular.",
+        radiographic: "Lesión radiolúcida multilocular expansiva clásica en 'pompas de jabón' o 'panal de abejas'.",
+        treatment: "Resección quirúrgica en bloque con márgenes óseos amplios (1-1.5 cm) por alta recidiva tras curetaje.",
+        examTip: "80% mandíbula posterior + imagen multilocular en 'pompas de jabón' + mutación BRAF V600E + márgenes amplios.",
+        alerts: ["alta-recidiva", "signo-rx", "dato-examen"]
+      },
+      {
+        id: 38,
+        category: "Tumores Odontogénicos",
+        name: "Tumor Odontogénico Escamoso (TOE)",
+        hangmanWord: "TUMOR ODONTOGENICO ESCAMOSO",
+        etiology: "Neoplasia odontogénica epitelial benigna rara originada de restos de Malassez en el ligamento periodontal.",
+        location: "Proceso alveolar de maxilar anterior y mandíbula posterior entre raíces dentarias.",
+        clinical: "Adultos jóvenes (~30-40 años). Movilidad dental leve y aumento de volumen gingival indoloro.",
+        radiographic: "Lesión radiolúcida unilocular característica de forma TRIANGULAR entre las raíces de dientes adyacentes.",
+        treatment: "Enucleación conservadora o curetaje; rara recurrencia.",
+        examTip: "Lesión radiolúcida unilocular de forma TRIANGULAR entre las raíces de dientes adyacentes.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 39,
+        category: "Tumores Odontogénicos",
+        name: "Tumor Odontogénico Epitelial Calcificante (Tumor de Pindborg)",
+        hangmanWord: "TUMOR DE PINDBORG",
+        etiology: "Neoplasia odontogénica epitelial benigna que secreta proteína amiloide con tendencia a calcificar.",
+        location: "Mandíbula posterior (región premolar-molar), frecuentemente asociado a diente retenido.",
+        clinical: "Adultos (30-50 años). Expansión ósea indolora de crecimiento lento.",
+        radiographic: "Lesión mixta radiolúcida-radiopaca con focos calcificados internos alrededor de corona retenida.",
+        treatment: "Resección local conservadora con margen sano; tasa de recurrencia aproximada del 15%.",
+        examTip: "Tumor de Pindborg: secreta proteína amiloide que tiende a calcificar; lesión mixta Rx; recurrencia del 15%.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 40,
+        category: "Tumores Odontogénicos",
+        name: "Tumor Odontogénico Adenomatoide (TOA)",
+        hangmanWord: "TUMOR ODONTOGENICO ADENOMATOIDE",
+        etiology: "Neoplasia odontogénica epitelial benigna encapsulada con estructuras ductales características ('tumor de los dos tercios').",
+        location: "Maxilar anterior; en el 60% de los casos asociado a un canino superior retenido.",
+        clinical: "Pacientes jóvenes (10-20 años), predilección femenina 2:1. Expansión cortical dura indolora.",
+        radiographic: "Radiolucidez pericoronaria bien delimitada que sobrepasa la unión amelocementaria (con finas calcificaciones).",
+        treatment: "Enucleación quirúrgica simple; no recidiva.",
+        examTip: "60% asociado a canino retenido + estructuras ductales + radiolucidez sobrepasa unión amelocementaria.",
+        alerts: ["signo-rx", "dato-examen"]
+      },
+      {
+        id: 41,
+        category: "Tumores Odontogénicos",
+        name: "Fibroma Ameloblástico (y Tumor Odontogénico Primordial)",
+        hangmanWord: "FIBROMA AMELOBLASTICO",
+        etiology: "Tumor odontogénico mixto benigno verdadero compuesto por ectomesénquima tipo papila dental y epitelio odontogénico SIN formación de tejido duro.",
+        location: "Región posterior de la mandíbula (70%), asociado a diente retenido.",
+        clinical: "Niños y adolescentes (edad promedio ~15 años). Retraso en la erupción dental y expansión ósea indolora.",
+        radiographic: "Radiolucidez uni o multilocular bien definida con borde corticalizado en mandíbula posterior.",
+        treatment: "Enucleación y curetaje conservador; recurrencia aproximada del 20%.",
+        examTip: "Edad promedio ~15 años; tumor mixto (epitelio + ectomesénquima) SIN tejido duro; recurrencia ~20%.",
+        alerts: ["alta-recidiva", "signo-rx", "dato-examen"]
+      }
+    ];
+
+    /* ==========================================================================
+       2. BANCO DE PREGUNTAS TIPO EXAMEN + CASOS CLÍNICOS
+       ========================================================================== */
+    const QUIZ_BANK = [
+      { id: "q1", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Qué tipos de VPH se asocian al Carcinoma Verrugoso en cavidad oral?", options: ["VPH 6 y 11", "VPH 16 y 18", "VPH 31 y 33", "VPH 2 y 4"], correct: 1, explanation: "El Carcinoma Verrugoso se asocia al VPH 16 y 18, afecta principalmente a hombres de ~55 años y presenta aspecto de coliflor." },
+      { id: "q2", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Cuál es el porcentaje de pacientes libres de enfermedad a 5 años tras cirugía en Carcinoma Verrugoso?", options: ["20%", "50%", "90%", "100% sin seguimiento"], correct: 2, explanation: "La metástasis es poco frecuente y el 90% de los casos están libres de enfermedad después de 5 años." },
+      { id: "q3", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "Un nódulo liso < 1.5 cm y base sésil en mucosa yugal por trauma crónico adquiere color blanco debido a:", options: ["Depósito de amiloide", "Hiperqueratosis", "Extravasación de eritrocitos", "Calcificación"], correct: 1, explanation: "El Fibroma / Hiperplasia Fibrosa es del color de la mucosa adyacente o blanco como consecuencia de hiperqueratosis." },
+      { id: "q4", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Cuál es la diferencia clínica entre el Épulis Fisurado y la Hiperplasia Papilar Inflamatoria?", options: ["El épulis fisurado aparece en paladar duro y la hiperplasia papilar en lengua", "El épulis fisurado forma pliegues fibrosos en vestíbulo por prótesis mal ajustada; la hiperplasia papilar afecta paladar duro por usar prótesis 24 hrs", "Ambos son malignos", "El épulis fisurado ocurre en niños"], correct: 1, explanation: "El Épulis Fisurado aparece en mucosa alveolar vestibular doblado de forma múltiple; la Hiperplasia Papilar ocurre en paladar duro por uso de prótesis 24 hrs y mala higiene." },
+      { id: "q5", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Hasta qué plano debe realizarse la excisión quirúrgica del Granuloma Periférico de Células Gigantes?", options: ["Solo superficial", "Hasta el hueso subyacente", "Únicamente drenaje", "No requiere cirugía"], correct: 1, explanation: "Ocurre exclusivamente en encía y reborde alveolar desdentado y requiere excisión quirúrgica hasta el hueso subyacente." },
+      { id: "q6", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Qué lesión gingival crece de la papila interdental, desplaza órganos dentarios, presenta áreas radiopacas y tiene 16% de recurrencia?", options: ["Fibroma traumático", "Épulis fisurado", "Fibroma osificante periférico", "Várices linguales"], correct: 2, explanation: "El Fibroma Osificante Periférico nace de la papila interdental, presenta calcificaciones radiopacas y tiene un 16% de recurrencia." },
+      { id: "q7", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "Histológicamente, el Granuloma Periférico de Células Gigantes se caracteriza por:", options: ["Tejido mineralizado tipo cemento", "Eritrocitos extravasados, monocitos y células gigantes multinucleadas", "Proteína amiloide calcificada", "Células de Schwann"], correct: 1, explanation: "Presenta eritrocitos extravasados, monocitos y células gigantes multinucleadas." },
+      { id: "q8", category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "¿Cuál es el tratamiento completo del Épulis Fisurado?", options: ["Solo enjuagues", "Remoción quirúrgica + ajuste de la prótesis", "Quimioterapia", "Esteroides tópicos"], correct: 1, explanation: "Requiere remoción quirúrgica de los pliegues hiperplásicos y ajuste o cambio de la prótesis." },
+
+      { id: "q9", category: "Lesiones Vasculares", question: "¿En qué proporción de personas > 60 años aparecen Várices Sublinguales y cuál es su tratamiento?", options: ["10%; cirugía", "> 2/3 de personas > 60 años; no requiere tratamiento", "50% de niños; escleroterapia", "5%; radioterapia"], correct: 1, explanation: "Se presentan en 2/3 de las personas > 60 años en la cara ventral de la lengua y al ser asintomáticas no tienen tratamiento." },
+      { id: "q10", category: "Lesiones Vasculares", question: "¿Cuál es la localización más frecuente del Granuloma Piógeno ('Tumor del embarazo')?", options: ["Paladar blando (80%)", "Encía región anterior (75%)", "Piso de boca (90%)", "Labio superior (60%)"], correct: 1, explanation: "El 75% ocurre en la encía de la región anterior, con predilección femenina, sangrado fácil al cepillado y alta recurrencia." },
+      { id: "q11", category: "Lesiones Vasculares", question: "¿Qué tumor vascular benigno es el más común en la infancia y responde a diascopía y escleroterapia?", options: ["Linfangioma", "Hemangioma", "Várice sublingual", "Neuroma traumático"], correct: 1, explanation: "El Hemangioma (60% cabeza y cuello) blanquea a la diascopía y responde a escleroterapia, láser, crioterapia o cirugía." },
+      { id: "q12", category: "Lesiones Vasculares", question: "¿Qué lesión produce macroglosia, vesículas translúcidas tipo 'huevos de rana' y NO responde a agentes esclerosantes?", options: ["Hemangioma", "Granuloma piógeno", "Linfangioma", "Ránula"], correct: 2, explanation: "El Linfangioma (90% antes de los 2 años) causa macroglosia con superficie 'empedrada' / 'huevos de rana' y no responde a esclerosantes." },
+      { id: "q13", category: "Lesiones Vasculares", question: "¿Qué complicación grave puede provocar un Hemangioma localizado en cuello o región laríngea?", options: ["Anquilosis", "Obstrucción de la vía aérea", "Necrosis pulpar", "Calcificación"], correct: 1, explanation: "Los hemangiomas profundos en cuello y laringe pueden causar obstrucción de la vía aérea." },
+
+      { id: "q14", category: "Lesiones Nerviosas", question: "¿Qué fracción de los casos de Neuroma Traumático presentan dolor?", options: ["Todos (100%)", "Solo 1/3 de los casos", "Ninguno", "90%"], correct: 1, explanation: "Solo 1/3 de los neuromas traumáticos presentan dolor (incluso dolor irradiado)." },
+      { id: "q15", category: "Lesiones Nerviosas", question: "¿Cómo se llamaba anteriormente al Tumor de Células Granulares y cuál es su sitio favorito?", options: ["Neurilemoma; encía", "Mioblastoma de células granulares; superficie dorsal de la lengua", "Higroma quístico; piso de boca", "Épulis; paladar"], correct: 1, explanation: "Se llamaba 'mioblastoma de células granulares' y afecta comúnmente la superficie dorsal de la lengua (nódulo rosado/amarillo <= 2 cm)." },
+      { id: "q16", category: "Lesiones Nerviosas", question: "En un Schwannoma (Neurilemoma) lingual de crecimiento lento, ¿qué indica un aumento súbito de tamaño?", options: ["Metástasis", "Hemorragia intralesional", "Infección viral", "Amiloide"], correct: 1, explanation: "Un crecimiento súbito de tamaño en el schwannoma sugiere hemorragia intralesional." },
+      { id: "q17", category: "Lesiones Nerviosas", question: "¿Qué células proliferan en el Neurofibroma Solitario y con qué síndrome se asocia si son múltiples?", options: ["Melanocitos; Peutz-Jeghers", "Células de Schwann y fibroblastos perineurales; Neurofibromatosis autosómica dominante", "Restos de Malassez; Gorlin", "Endotelio; Sjögren"], correct: 1, explanation: "Se relaciona con células de Schwann y fibroblastos perineurales; múltiples forman parte de la neurofibromatosis hereditaria autosómica dominante." },
+
+      { id: "q18", category: "Lesiones Pigmentadas", question: "¿Cuál es la causa fisiopatológica de la hiperpigmentación en la Enfermedad de Addison?", options: ["Depósito de hierro", "Destrucción de corteza adrenal -> bajo cortisol -> secreción elevada de ACTH que promueve melanogénesis", "Exposición solar", "Bilirrubina"], correct: 1, explanation: "La insuficiencia de cortisol hace que la hipófisis secrete grandes cantidades de ACTH, promoviendo la melanogénesis." },
+      { id: "q19", category: "Lesiones Pigmentadas", question: "¿Cómo se diferencian el Síndrome de Peutz-Jeghers y el Síndrome de Laugier-Hunziker?", options: ["Peutz-Jeghers es hereditario AD con pólipos intestinales y riesgo neoplásico; Laugier-Hunziker es idiopático con melanoniquia en uñas sin pólipos", "Laugier-Hunziker ocurre en bebés", "Peutz-Jeghers es por amalgama", "No hay diferencia"], correct: 0, explanation: "Peutz-Jeghers presenta pecas labiales/periorales + poliposis intestinal; Laugier-Hunziker presenta máculas orales + melanoniquia (uñas oscuras) sin pólipos." },
+      { id: "q20", category: "Lesiones Pigmentadas", question: "La pigmentación farmacológica en paladar duro se asocia específicamente a medicamentos para:", options: ["Hipertensión", "Artritis reumatoide y lupus sistémico (y minociclina da color azul-negro)", "Asma", "Gastritis"], correct: 1, explanation: "Los fármacos para artritis reumatoide y lupus sistémico pigmentan el paladar duro; la minociclina produce coloración azul-negra." },
+      { id: "q21", category: "Lesiones Pigmentadas", question: "¿Qué conducta debe tomarse ante un Melanoacantoma Oral de rápido crecimiento en mucosa yugal?", options: ["Observar sin biopsia", "Realizar BIOPSIA para descartar melanoma", "Aplicar flúor", "Extraer molares"], correct: 1, explanation: "Su rápido crecimiento semeja melanoma, por lo que requiere biopsia para descartarlo." },
+      { id: "q22", category: "Lesiones Pigmentadas", question: "¿A qué efecto óptico debe su color el Nevo Azul en el paladar?", options: ["Efecto Doppler", "Efecto Tyndall", "Fluorescencia", "Hemosiderosis"], correct: 1, explanation: "El Nevo Azul (< 6 mm, 2da-4ta década) debe su color azulado al efecto Tyndall." },
+      { id: "q23", category: "Lesiones Pigmentadas", question: "¿Cuál es la supervivencia aproximada a 5 años del Melanoma de Mucosa Oral?", options: ["95%", "75%", "~20%", "50%"], correct: 2, explanation: "Es una neoplasia maligna muy agresiva en paladar duro y reborde alveolar (regla ABCDE) con supervivencia a 5 años de ~20%." },
+      { id: "q24", category: "Lesiones Pigmentadas", question: "¿Cómo se observa en ocasiones un Tatuaje por Amalgama en una radiografía?", options: ["Pompas de jabón", "Pequeños puntos radiopacos", "Imagen en rayos de sol", "Halo radiolúcido"], correct: 1, explanation: "Las partículas metálicas exógenas pueden verse como pequeños puntos radiopacos junto a restauraciones de metal." },
+
+      { id: "q25", category: "Glándulas Salivales y Trastornos Inmunitarios", question: "¿Cuál es la diferencia histológica entre Mucocele y Quiste por Retención Mucosa?", options: ["El mucocele tiene queratina", "El mucocele NO está revestido por epitelio (extravasación); el quiste por retención SÍ está revestido por epitelio", "Son idénticos", "El mucocele solo ocurre en parótida"], correct: 1, explanation: "El mucocele es ruptura ductal sin revestimiento epitelial; el quiste por retención mucosa tiene revestimiento epitelial." },
+      { id: "q26", category: "Glándulas Salivales y Trastornos Inmunitarios", question: "¿Por qué se extirpan las glándulas salivales menores adyacentes al operar un Mucocele?", options: ["Son malignas", "Para evitar recidivas", "Prevenir Sjögren", "Evitar fractura"], correct: 1, explanation: "Deben retirarse las glándulas salivales menores adyacentes para evitar que vuelva a llenarse y recidive." },
+      { id: "q27", category: "Glándulas Salivales y Trastornos Inmunitarios", question: "¿Qué patología isquémica ocurre en 75% en paladar duro formando una úlcera profunda que imita cáncer?", options: ["Ránula", "Sialometaplasia necrosante", "Sjögren", "Quiste de erupción"], correct: 1, explanation: "La Sialometaplasia Necrosante forma una úlcera necrótica profunda en paladar duro que semeja proceso maligno." },
+      { id: "q28", category: "Glándulas Salivales y Trastornos Inmunitarios", question: "¿Qué autoanticuerpos séricos son criterios diagnósticos en el Síndrome de Sjögren?", options: ["Anti-DNA", "Anti-Ro (SS-A) y Anti-La (SS-B)", "Anti-insulina", "Anti-CCP"], correct: 1, explanation: "Se detectan anticuerpos contra antígenos Ro (SS-A) y/o La (SS-B), además de sialometría <= 1.5 ml/15 min y focus score >= 1." },
+      { id: "q29", category: "Glándulas Salivales y Trastornos Inmunitarios", question: "¿Qué fármaco sialogogo se utiliza para tratar la xerostomía en Síndrome de Sjögren?", options: ["Minociclina", "Pilocarpina", "Ketoconazol", "Clofazimina"], correct: 1, explanation: "El tratamiento paliativo incluye saliva artificial, chicles sin azúcar y sialogogos como la pilocarpina." },
+
+      { id: "q30", category: "Quistes Odontogénicos", question: "¿De qué estructura se origina el Quiste Radicular / Periapical (>50% del total de quistes)?", options: ["Epitelio reducido del esmalte", "Restos epiteliales de Malassez", "Células de Schwann", "Glándulas menores"], correct: 1, explanation: "Procede de restos epiteliales de Malassez asociados a un diente desvitalizado." },
+      { id: "q31", category: "Quistes Odontogénicos", question: "¿Cómo se denomina el quiste radicular que permanece en el hueso tras extraer el diente causal sin enuclearlo?", options: ["Quiste dentígero", "Quiste residual", "Quiste de erupción", "Quiste gingival"], correct: 1, explanation: "Se denomina Quiste Residual y su tratamiento es la enucleación." },
+      { id: "q32", category: "Quistes Odontogénicos", question: "¿De qué tejido se origina el Quiste Dentígero (17%) y dónde se inserta?", options: ["Restos de Malassez; ápice", "Epitelio reducido del esmalte; unión amelocementaria rodeando la corona", "Lámina dental; furca", "Mucosa palatina"], correct: 1, explanation: "Se origina del epitelio reducido del esmalte en la unión amelocementaria alrededor de la corona de un diente retenido." },
+      { id: "q33", category: "Quistes Odontogénicos", question: "¿Cómo están los dientes vecinos en un Quiste Periodontal Lateral / Botrioide?", options: ["Necróticos", "VITALES", "Con resorción total", "Temporales"], correct: 1, explanation: "En el quiste periodontal lateral (premolares inferiores) y gingival del adulto los dientes vecinos están vitales." },
+      { id: "q34", category: "Quistes Odontogénicos", question: "¿Qué se aspira al hacer una punción exploratoria en un Queratoquiste Odontogénico?", options: ["Sangre arterial", "Queratina amarilla cremosa", "Aire", "Saliva"], correct: 1, explanation: "La punción exploratoria aspira queratina amarilla; tiene alta recidiva (5-62%) y se asocia al Síndrome de Gorlin." },
+
+      { id: "q35", category: "Tumores Odontogénicos", question: "¿Qué mutación genética se asocia al Ameloblastoma y cuál es su imagen radiográfica clásica?", options: ["BRAF V600E; 'pompas de jabón' o 'panal de abejas'", "BRCA1; rayos de sol", "ALK; copos de algodón", "TP53; triangular"], correct: 0, explanation: "El Ameloblastoma (80% mandíbula posterior) presenta mutaciones en BRAF V600E e imagen multilocular en 'pompas de jabón' o 'panal de abejas'." },
+      { id: "q36", category: "Tumores Odontogénicos", question: "¿Qué tumor odontogénico epitelial produce una radiolucidez unilocular de forma TRIANGULAR entre raíces?", options: ["Cementoblastoma", "Tumor odontogénico escamoso", "Fibroma ameloblástico", "Tumor de Pindborg"], correct: 1, explanation: "El Tumor Odontogénico Escamoso presenta una lesión radiolúcida unilocular de forma triangular entre raíces." },
+      { id: "q37", category: "Tumores Odontogénicos", question: "¿Qué sustancia secreta el Tumor Odontogénico Epitelial Calcificante (Tumor de Pindborg)?", options: ["Queratina", "Proteína amiloide que tiende a calcificar", "Mucina", "Melanina"], correct: 1, explanation: "Secreta una proteína amiloide que tiende a calcificar y presenta una recurrencia del 15%." },
+      { id: "q38", category: "Tumores Odontogénicos", question: "¿A qué diente retenido se asocia en el 60% el Tumor Odontogénico Adenomatoide (TOA)?", options: ["Tercer molar inferior", "Canino retenido", "Incisivo central", "Segundo premolar"], correct: 1, explanation: "El TOA (estructuras ductales, 'tumor de los 2/3') se asocia en un 60% a caninos retenidos." },
+      { id: "q39", category: "Tumores Odontogénicos", question: "¿Qué caracteriza al Fibroma Ameloblástico (edad promedio 15 años)?", options: ["Ectomesénquima tipo papila dental y epitelio SIN tejido duro", "Solo cemento", "Metástasis", "Ancianos"], correct: 0, explanation: "Contiene ectomesénquima odontogénico y epitelio sin presencia de tejido duro; recurrencia ~20%." },
+
+      // --- PREGUNTAS CON APOYO VISUAL ---
+      { id: "qv1", isVisualCase: true, visualPathId: 2, category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "📸 Caso Visual 1: Agrandamiento nodular liso rosado < 1.5 cm en encía vestibular mandibular por trauma crónico. ¿Cuál es el diagnóstico y manejo?", options: ["Fibroma / Hiperplasia fibrosa; cirugía conservativa con baja recurrencia", "Melanoma oral; hemimaxilectomía", "Queratoquiste; marsupialización", "Sialometaplasia necrosante; observación"], correct: 0, explanation: "Corresponde a un Fibroma / Hiperplasia fibrosa: nódulo liso rosado < 1.5 cm por trauma crónico, tratado con cirugía conservativa." },
+      { id: "qv2", isVisualCase: true, visualPathId: 3, category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "📸 Caso Visual 2: Pliegue doble de tejido fibroso rosado firme en fondo de saco vestibular superior de portador de prótesis. ¿Qué entidad es?", options: ["Hiperplasia papilar inflamatoria", "Épulis fisurado", "Ránula", "Tumor de células granulares"], correct: 1, explanation: "Es un Épulis fisurado: tejido hiperplásico doblado en pliegues múltiples donde encaja el borde de una prótesis desajustada." },
+      { id: "qv3", isVisualCase: true, visualPathId: 4, category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "📸 Caso Visual 3: Múltiples proyecciones papilares eritematosas agrupadas en paladar duro bajo prótesis total. ¿Cuál es el factor etiológico clave?", options: ["Uso continuo de prótesis 24 horas (incluso de noche) y mala higiene", "VPH tipos 16 y 18", "Deficiencia de cortisol", "Extravasación de mucina"], correct: 0, explanation: "La Hiperplasia papilar inflamatoria afecta el paladar duro bajo prótesis desajustadas usadas las 24 horas." },
+      { id: "qv4", isVisualCase: true, visualPathId: 5, category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "📸 Caso Visual 4: Nódulo sésil rojo-violáceo exclusivo de encía y reborde alveolar desdentado. ¿Hasta qué plano debe excindirse?", options: ["Solo biopsia superficial", "Excisión quirúrgica hasta el hueso subyacente", "Esteroides tópicos", "No requiere tratamiento"], correct: 1, explanation: "El Granuloma periférico de células gigantes debe excindirse hasta el hueso subyacente." },
+      { id: "qv5", isVisualCase: true, visualPathId: 6, category: "Lesiones Epiteliales y del Tejido Conjuntivo", question: "📸 Caso Visual 5: Masa nodular exofítica firme originada en la papila interdental anterior superior. ¿Qué hallazgo radiográfico y recurrencia presenta?", options: ["Áreas radiopacas (calcificaciones) y 16% de recurrencia", "Pompas de jabón y 62% de recurrencia", "Puntos radiopacos de amalgama y 0% recurrencia", "Sin hallazgos radiográficos"], correct: 0, explanation: "El Fibroma osificante periférico presenta pequeñas calcificaciones radiopacas y 16% de recurrencia." },
+      { id: "qv6", isVisualCase: true, visualPathId: 7, category: "Lesiones Vasculares", question: "📸 Caso Visual 6: Múltiples dilataciones venosas tortuosas azuladas en cara ventral de lengua en adulto mayor. ¿Cuál es la conducta?", options: ["No requiere tratamiento (presente en 2/3 de personas > 60 años)", "Resección en bloque", "Escleroterapia urgente", "Quimioterapia"], correct: 0, explanation: "Las Várices linguales/sublinguales son fisiológicas de la edad y no requieren tratamiento." },
+      { id: "qv7", isVisualCase: true, visualPathId: 8, category: "Lesiones Vasculares", question: "📸 Caso Visual 7: Masa lobulada rojo brillante ulcerada en encía anterior que sangra fácil sin doler. ¿Con qué se asocia?", options: ["Embarazo ('Tumor del embarazo', predilección femenina)", "Insuficiencia suprarrenal", "Síndrome de Gorlin", "Poliposis intestinal"], correct: 0, explanation: "El Granuloma piógeno ocurre en 75% en encía anterior y se asocia al embarazo." },
+      { id: "qv8", isVisualCase: true, visualPathId: 9, category: "Lesiones Vasculares", question: "📸 Caso Visual 8: Aumento vascular submucoso azulado-violáceo. ¿Qué maniobra clínica y tratamiento son característicos?", options: ["Diascopía positiva y respuesta a agentes esclerosantes", "Punción con queratina amarilla", "Endodoncia", "Ningún tratamiento"], correct: 0, explanation: "El Hemangioma blanquea a la diascopía y responde a agentes esclerosantes." },
+      { id: "qv9", isVisualCase: true, visualPathId: 10, category: "Lesiones Vasculares", question: "📸 Caso Visual 9: Vesículas translúcidas en lengua anterior tipo 'huevos de rana'. ¿Qué característica terapéutica lo distingue del hemangioma?", options: ["NO responde a agentes esclerosantes", "Desaparece con esteroides", "Se cura con pilocarpina", "Solo ajuste protésico"], correct: 0, explanation: "El Linfangioma NO responde a agentes esclerosantes." },
+      { id: "qv10", isVisualCase: true, visualPathId: 11, category: "Lesiones Nerviosas", question: "📸 Caso Visual 10: Nódulo rosado circunscrito liso en borde lateral de lengua tras trauma. ¿Qué porcentaje refiere dolor?", options: ["Solo 1/3 de los casos", "El 100%", "Ninguno", "El 90%"], correct: 0, explanation: "En el Neuroma traumático solo 1/3 de los casos presentan dolor." }
+    ];
+
+    const CLINICAL_CASES = [
+      { id: "c1", visualPathId: 1, category: "Lesiones Epiteliales y del Tejido Conjuntivo", patient: "Hombre de 55 años", presentation: "Placa gruesa bien delimitada, asintomática y con aspecto de 'coliflor' en la parte anterior de la mandíbula y mucosa yugal, positiva para VPH 16 y 18.", options: ["Fibroma traumático", "Carcinoma Verrugoso / Papiloma por VPH", "Granuloma piógeno", "Melanoacantoma"], correct: 1, clue: "Coliflor + VPH 16 y 18 + hombre 55 años." },
+      { id: "c2", visualPathId: 4, category: "Lesiones Epiteliales y del Tejido Conjuntivo", patient: "Adulta mayor portadora de prótesis total superior", presentation: "Usa la prótesis las 24 horas (también de noche) y tiene mala higiene. Paladar duro eritematoso con superficie papilar asintomática debajo de la dentadura.", options: ["Épulis fisurado", "Hiperplasia Papilar Inflamatoria", "Sialometaplasia necrosante", "Melanoma"], correct: 1, clue: "Prótesis 24 hrs + superficie papilar eritematosa en paladar duro." },
+      { id: "c3", visualPathId: 3, category: "Lesiones Epiteliales y del Tejido Conjuntivo", patient: "Adulto mayor con dentadura desajustada", presentation: "Tejido hiperplásico doblado en pliegues múltiples firmes y fibrosos en mucosa alveolar vestibular con fisura eritematosa ulcerada > 1 cm.", options: ["Épulis Fisurado", "Hiperplasia papilar", "Quiste gingival", "Schwannoma"], correct: 0, clue: "Pliegues múltiples en vestíbulo donde se fija la dentadura." },
+      { id: "c4", visualPathId: 6, category: "Lesiones Epiteliales y del Tejido Conjuntivo", patient: "Paciente joven de 20 años", presentation: "Nódulo rojizo ulcerado que crece de la papila interdental, desplaza los dientes vecinos y muestra pequeñas áreas radiopacas (calcificaciones) en Rx.", options: ["Fibroma Osificante Periférico", "Granuloma piógeno", "Mucocele", "Várices"], correct: 0, clue: "Papila interdental + desplaza dientes + calcificaciones radiopacas." },
+      { id: "c5", visualPathId: 8, category: "Lesiones Vasculares", patient: "Mujer embarazada de 27 años", presentation: "Nódulo lobulado pediculado rojo-morado en encía anterior de rápido crecimiento que sangra al cepillarse pero no duele.", options: ["Granuloma Piógeno (Tumor del embarazo)", "Fibroma", "Nevo azul", "Quiste periodontal lateral"], correct: 0, clue: "75% encía anterior + embarazo + sangrado fácil indoloro." },
+      { id: "c6", visualPathId: 10, category: "Lesiones Vasculares", patient: "Niño de 18 meses", presentation: "Macroglosia en zona anterior de la lengua con superficie 'empedrada' y vesículas translúcidas tipo 'huevos de rana'.", options: ["Hemangioma", "Linfangioma", "Neurofibroma", "Tumor de células granulares"], correct: 1, clue: "Antes de 2 años + macroglosia + 'huevos de rana' / superficie empedrada." },
+      { id: "c7", visualPathId: 7, category: "Lesiones Vasculares", patient: "Hombre de 68 años hipertenso", presentation: "Múltiples pápulas y venas dilatadas tortuosas de tono azulado en cara ventral de la lengua, totalmente asintomáticas.", options: ["Melanoma", "Várices Linguales / Sublinguales", "Ránula", "Tatuaje por amalgama"], correct: 1, clue: "2/3 de >60 años en vientre lingual; sin tratamiento." },
+      { id: "c8", visualPathId: 11, category: "Lesiones Nerviosas", patient: "Mujer de 30 años post-extracción dental", presentation: "Nódulo de superficie lisa no ulcerado en borde lateral de lengua / labio inferior con dolor irradiado a la palpación.", options: ["Neuroma Traumático", "Mucocele", "TOA", "Épulis fisurado"], correct: 0, clue: "Trauma/extracción + nódulo liso con dolor (1/3 de casos)." },
+      { id: "c9", visualPathId: 12, category: "Lesiones Nerviosas", patient: "Mujer de 49 años", presentation: "Nódulo asintomático de base sésil <= 2 cm, color rosado-amarillento en superficie dorsal de la lengua.", options: ["Tumor de Células Granulares", "Linfangioma", "Melanosis del fumador", "Quiste de erupción"], correct: 0, clue: "Dorso de lengua + nódulo rosado/amarillento <= 2 cm." },
+      { id: "c10", visualPathId: 18, category: "Lesiones Pigmentadas", patient: "Adolescente de 15 años", presentation: "Efélides (pecas) en labios y piel perioral + máculas en mucosa yugal + poliposis intestinal hereditaria.", options: ["Síndrome de Laugier-Hunziker", "Síndrome de Peutz-Jeghers", "Melanosis racial", "Addison"], correct: 1, clue: "Pecas periorales + pólipos intestinales (autosómico dominante)." },
+      { id: "c11", visualPathId: 19, category: "Lesiones Pigmentadas", patient: "Mujer de 50 años", presentation: "Múltiples máculas en mucosa yugal y labios acompañadas de melanoniquia (bandas oscuras en uñas de manos y pies), sin pólipos.", options: ["Síndrome de Laugier-Hunziker", "Peutz-Jeghers", "Tatuaje por amalgama", "Melanoma"], correct: 0, clue: "Adultos ~50 años, mujeres 2:1 + melanoniquia sin pólipos." },
+      { id: "c12", visualPathId: 17, category: "Lesiones Pigmentadas", patient: "Paciente de 40 años con insuficiencia suprarrenal", presentation: "Melanosis en parches mucocutáneos por bajo cortisol y secreción elevada de ACTH.", options: ["Enfermedad de Addison", "Melanosis del fumador", "Melanoacantoma", "Nevo azul"], correct: 0, clue: "Cortisol bajo + ACTH alta; desaparece con esteroides." },
+      { id: "c13", visualPathId: 25, category: "Lesiones Pigmentadas", patient: "Hombre de 53 años", presentation: "Lesión pigmentada en paladar duro asimétrica, bordes irregulares, color heterogéneo y evolución rápida (criterios ABCDE).", options: ["Melanoma de Mucosa Oral", "Melanosis racial", "Nevo azul", "Tatuaje por amalgama"], correct: 0, clue: "Paladar duro + ABCDE + maligno." },
+      { id: "c14", visualPathId: 29, category: "Glándulas Salivales y Trastornos Inmunitarios", patient: "Hombre de 46 años", presentation: "Úlcera profunda de 2 cm en paladar duro unilateral tras isquemia/anestesia que asemeja carcinoma maligno.", options: ["Sialometaplasia Necrosante", "Carcinoma verrugoso", "Hiperplasia papilar", "Granuloma piógeno"], correct: 0, clue: "Paladar duro unilateral + úlcera necrótica profunda que imita cáncer." },
+      { id: "c15", visualPathId: 30, category: "Glándulas Salivales y Trastornos Inmunitarios", patient: "Mujer de 60 años con Artritis Reumatoide", presentation: "Xerostomía, xeroftalmía, lengua fisurada con atrofia papilar y anticuerpos Anti-Ro (SS-A) y Anti-La (SS-B).", options: ["Síndrome de Sjögren", "Enfermedad de Addison", "Melanosis farmacológica", "Ránula"], correct: 0, clue: "Boca seca + ojos secos + Anti-Ro/La." },
+      { id: "c16", visualPathId: 28, category: "Glándulas Salivales y Trastornos Inmunitarios", patient: "Joven de 22 años", presentation: "Lesión fluctuante grande color azul-morado en PISO DE BOCA que eleva la lengua.", options: ["Ránula", "Mucocele labial", "Quiste gingival", "Fibroma"], correct: 0, clue: "Piso de boca + aspecto azulado que eleva la lengua ('rana')." },
+      { id: "c17", visualPathId: 32, category: "Quistes Odontogénicos", patient: "Joven de 23 años", presentation: "Área radiolúcida unilocular rodeando la corona de un tercer molar inferior retenido, unida a la unión amelocementaria.", options: ["Quiste Dentígero", "Quiste radicular", "Quiste periodontal lateral", "Tumor escamoso"], correct: 0, clue: "Radiolucidez pericoronaria en unión amelocementaria." },
+      { id: "c18", visualPathId: 36, category: "Quistes Odontogénicos", patient: "Hombre de 32 años", presentation: "Zona radiolúcida multilocular en rama ascendente de la mandíbula; punción exploratoria obtiene queratina amarilla.", options: ["Queratoquiste Odontogénico", "Ameloblastoma", "Quiste de erupción", "Hemangioma"], correct: 0, clue: "Rama mandibular + punción con queratina amarilla." },
+      { id: "c19", visualPathId: 34, category: "Quistes Odontogénicos", patient: "Hombre de 44 años", presentation: "Zona radiolúcida unilocular lateral a la raíz de premolares inferiores que responden VITALES.", options: ["Quiste Periodontal Lateral", "Quiste radicular", "Quiste dentígero", "Granuloma periapical"], correct: 0, clue: "Lateral a raíz en premolares inferiores con dientes vitales." },
+      { id: "c20", visualPathId: 37, category: "Tumores Odontogénicos", patient: "Paciente de 43 años", presentation: "Deformación facial en mandíbula posterior con imagen radiográfica multilocular en 'pompas de jabón' y mutación BRAF V600E.", options: ["Ameloblastoma", "TOA", "Quiste de erupción", "Fibroma periférico"], correct: 0, clue: "Mandíbula posterior + 'pompas de jabón' + BRAF V600E." },
+      { id: "c21", visualPathId: 40, category: "Tumores Odontogénicos", patient: "Adolescente de 16 años", presentation: "Lesión radiolúcida bien definida alrededor de la corona de un canino maxilar retenido con expansión cortical dura.", options: ["Tumor Odontogénico Adenomatoide (TOA)", "Tumor escamoso", "Quiste radicular", "Sialometaplasia"], correct: 0, clue: "60% asociado a canino retenido + estructuras ductales." },
+      { id: "c22", visualPathId: 41, category: "Tumores Odontogénicos", patient: "Joven de 15 años", presentation: "Tumor mixto en zona posterior mandibular descubierto por retraso en erupción dental, sin formación de tejido duro.", options: ["Fibroma Ameloblástico", "Odontoma complejo", "Cementoblastoma", "Quiste residual"], correct: 0, clue: "15 años + tumor mixto sin tejido duro." }
+    ];
+
+    /* ==========================================================================
+       3. GESTIÓN DE FOTOGRAFÍAS (INDEXEDDB + DETECCIÓN GITHUB + EXPORTACIÓN HTML)
+       ========================================================================== */
+    const userLoadedPhotosCache = { ...EMBEDDED_USER_PHOTOS };
+    const detectedRepoPhotosCache = {};
+    const PHOTOS_DB_NAME = "PatologiaBucalPhotosDB";
+    const PHOTOS_STORE_NAME = "user_clinical_photos";
+
+    function openPhotosDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error("IndexedDB no disponible"));
+          return;
+        }
+        const req = indexedDB.open(PHOTOS_DB_NAME, 1);
+        req.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(PHOTOS_STORE_NAME)) {
+            db.createObjectStore(PHOTOS_STORE_NAME);
+          }
+        };
+        req.onsuccess = e => resolve(e.target.result);
+        req.onerror = e => reject(e.target.error);
+      });
+    }
+
+    async function loadUserPhotosFromDB() {
+      try {
+        const db = await openPhotosDB();
+        const tx = db.transaction(PHOTOS_STORE_NAME, "readonly");
+        const store = tx.objectStore(PHOTOS_STORE_NAME);
+        const keysReq = store.getAllKeys();
+        const valsReq = store.getAll();
+        await new Promise(res => {
+          tx.oncomplete = () => {
+            const keys = keysReq.result || [];
+            const vals = valsReq.result || [];
+            keys.forEach((k, i) => {
+              if (vals[i]) userLoadedPhotosCache[Number(k)] = vals[i];
+            });
+            res();
+          };
+          tx.onerror = () => res();
+        });
+      } catch (e) {
+        console.warn("Usando caché en memoria para fotos:", e);
+      }
+      updatePhotosBadgeUI();
+    }
+
+    async function saveUserPhotoToDB(pathId, dataUrl) {
+      userLoadedPhotosCache[Number(pathId)] = dataUrl;
+      updatePhotosBadgeUI();
+      try {
+        const db = await openPhotosDB();
+        const tx = db.transaction(PHOTOS_STORE_NAME, "readwrite");
+        tx.objectStore(PHOTOS_STORE_NAME).put(dataUrl, Number(pathId));
+      } catch (e) {
+        console.warn("No se pudo persistir foto en IndexedDB:", e);
+      }
+    }
+
+    async function removeUserPhotoFromDB(pathId) {
+      const idNum = Number(pathId);
+      delete userLoadedPhotosCache[idNum];
+      updatePhotosBadgeUI();
+      try {
+        const db = await openPhotosDB();
+        const tx = db.transaction(PHOTOS_STORE_NAME, "readwrite");
+        tx.objectStore(PHOTOS_STORE_NAME).delete(idNum);
+      } catch (e) {
+        console.warn("Error eliminando foto en IndexedDB:", e);
+      }
+      renderPhotosManagerModal();
+      refreshCurrentViewAfterPhotoChange();
+      showToast(`🗑️ Foto #${idNum} eliminada`, "amber");
+    }
+
+    function probeImageUrl(url) {
+      return new Promise(resolve => {
+        const tester = new Image();
+        tester.onload = () => resolve(tester.naturalWidth > 0 ? url : null);
+        tester.onerror = () => resolve(null);
+        tester.src = url;
+      });
+    }
+
+    function matchFilenameToPathologyId(filename, fallbackIndex = null) {
+      const clean = filename
+        .replace(/^.*[\\/]/, "")
+        .replace(/\.[^.]+$/, "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      const withoutDates = clean
+        .replace(/\b20\d{2}[-_.]?\d{2}[-_.]?\d{2}\b/g, " ")
+        .replace(/\b\d{1,2}[:.]\d{2}[:.]\d{2}\b/g, " ");
+
+      const startMatch = withoutDates.match(/^\s*0*([1-9]|[1-3][0-9]|4[01])(?:[^0-9]|$)/);
+      if (startMatch) return Number(startMatch[1]);
+
+      const endMatch = withoutDates.match(/(?:^|[^0-9])0*([1-9]|[1-3][0-9]|4[01])\s*$/);
+      if (endMatch) return Number(endMatch[1]);
+
+      const keywordMap = [
+        [1, ["verrugoso", "papiloma", "vph"]],
+        [2, ["hiperplasia fibrosa", "fibroma traumatico", "fibroma"]],
+        [3, ["epulis", "fisurado"]],
+        [4, ["papilar", "hiperplasia papilar"]],
+        [5, ["celulas gigantes", "gigantes"]],
+        [6, ["osificante"]],
+        [7, ["varices", "sublinguales"]],
+        [8, ["piogeno", "embarazo"]],
+        [9, ["hemangioma"]],
+        [10, ["linfangioma"]],
+        [11, ["neuroma"]],
+        [12, ["granulares", "mioblastoma"]],
+        [13, ["schwannoma", "neurilemoma"]],
+        [14, ["neurofibroma"]],
+        [15, ["racial", "fisiologica"]],
+        [16, ["fumador"]],
+        [17, ["addison"]],
+        [18, ["peutz", "jeghers"]],
+        [19, ["laugier", "hunziker"]],
+        [20, ["farmacologica", "minociclina"]],
+        [21, ["macula melanotica", "macula"]],
+        [22, ["amalgama", "tatuaje"]],
+        [23, ["melanoacantoma"]],
+        [24, ["nevo", "nevos"]],
+        [25, ["melanoma"]],
+        [26, ["mucocele", "extravasacion"]],
+        [27, ["retencion"]],
+        [28, ["ranula"]],
+        [29, ["sialometaplasia", "necrosante"]],
+        [30, ["sjogren"]],
+        [31, ["radicular", "periapical", "residual"]],
+        [32, ["dentigero", "folicular"]],
+        [33, ["erupcion"]],
+        [34, ["periodontal lateral", "botrioide"]],
+        [35, ["gingival"]],
+        [36, ["queratoquiste", "gorlin"]],
+        [37, ["ameloblastoma"]],
+        [38, ["escamoso"]],
+        [39, ["pindborg", "calcificante"]],
+        [40, ["adenomatoide", "toa"]],
+        [41, ["ameloblastico", "primordial"]]
+      ];
+
+      for (const [id, words] of keywordMap) {
+        if (words.some(w => withoutDates.includes(w))) return id;
+      }
+      return fallbackIndex;
+    }
+
+    async function discoverGitHubRepoImages() {
+      try {
+        const host = window.location.hostname || "";
+        const pathParts = (window.location.pathname || "/").split("/").filter(Boolean);
+        if (!host.endsWith(".github.io") || pathParts.length === 0) return false;
+
+        const owner = host.replace(".github.io", "");
+        const repo = pathParts[0];
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/HEAD?recursive=1`;
+        const resp = await fetch(apiUrl);
+        if (!resp.ok) return false;
+
+        const data = await resp.json();
+        const tree = Array.isArray(data.tree) ? data.tree : [];
+        const imgFiles = tree.filter(item =>
+          item.type === "blob" && /\.(jpe?g|png|webp|gif|jfif)$/i.test(item.path)
+        );
+
+        let matched = 0;
+        for (const file of imgFiles) {
+          const targetId = matchFilenameToPathologyId(file.path, null);
+          if (targetId && targetId >= 1 && targetId <= PATHOLOGIES.length && !detectedRepoPhotosCache[targetId]) {
+            detectedRepoPhotosCache[targetId] = encodeURI(file.path);
+            matched++;
+          }
+        }
+        return matched > 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function detectRepoFolderPhotos(manualTrigger = false) {
+      if (!window.location || window.location.protocol === "about:" || window.location.protocol === "blob:") {
+        updatePhotosBadgeUI();
+        if (manualTrigger) {
+          showToast("En vista previa usa 'Subir varias fotos' o 'Recuperar de HTML'", "amber");
+        }
+        return;
+      }
+
+      if (manualTrigger) {
+        showToast("🔍 Buscando imágenes en tu repositorio...", "clinical");
+      }
+
+      const foundViaApi = await discoverGitHubRepoImages();
+      let foundAny = foundViaApi;
+
+      await Promise.all(PATHOLOGIES.map(async p => {
+        const idNum = p.id;
+        if (userLoadedPhotosCache[idNum] || detectedRepoPhotosCache[idNum]) return;
+        const asset = VISUAL_ASSETS[idNum] || {};
+        const pad2 = String(idNum).padStart(2, "0");
+        const candidates = [
+          ...(asset.repoCandidates || []),
+          `img/${idNum}.jpg`,
+          `img/${idNum}.JPG`,
+          `img/${idNum}.png`,
+          `img/${idNum}.PNG`,
+          `img/${idNum}.jpeg`,
+          `img/${pad2}.jpg`,
+          `img/${pad2}.png`,
+          `IMG/${idNum}.jpg`,
+          `IMG/${idNum}.png`,
+          `${idNum}.jpg`,
+          `${idNum}.png`
+        ];
+        for (const url of candidates) {
+          const validUrl = await probeImageUrl(url);
+          if (validUrl) {
+            detectedRepoPhotosCache[idNum] = validUrl;
+            foundAny = true;
+            break;
+          }
+        }
+      }));
+
+      updatePhotosBadgeUI();
+      if (foundAny) {
+        if (manualTrigger) {
+          const total = PATHOLOGIES.filter(p => !!getActivePhotoForPathology(p.id)).length;
+          showToast(`✅ ¡Listo! ${total}/41 imágenes cargadas`, "emerald");
+        }
+        const modalEl = document.getElementById("photos-manager-modal");
+        if (modalEl && !modalEl.classList.contains("hidden")) {
+          renderPhotosManagerModal();
+        }
+        refreshCurrentViewAfterPhotoChange();
+      } else if (manualTrigger) {
+        showToast("⚠️ No se hallaron archivos en img/ ni en la raíz aún", "amber");
+      }
+    }
+
+    function getActivePhotoForPathology(pathId) {
+      const idNum = Number(pathId);
+      return userLoadedPhotosCache[idNum] || detectedRepoPhotosCache[idNum] || null;
+    }
+
+    function updatePhotosBadgeUI() {
+      const badge = document.getElementById("stat-photos-count");
+      const quickExportBtn = document.getElementById("btn-quick-export-header");
+      const loadedIds = PATHOLOGIES.filter(p => !!getActivePhotoForPathology(p.id)).map(p => p.id);
+      const loadedCount = loadedIds.length;
+
+      if (badge) {
+        badge.textContent = `Mis Fotos (${loadedCount}/${PATHOLOGIES.length})`;
+      }
+      if (quickExportBtn) {
+        if (loadedCount > 0) quickExportBtn.classList.remove("hidden");
+        else quickExportBtn.classList.add("hidden");
+      }
+
+      const missingSummary = document.getElementById("photos-missing-summary");
+      if (missingSummary) {
+        if (loadedCount === PATHOLOGIES.length) {
+          missingSummary.textContent = "✅ ¡Completaste las 41/41 fotografías! Descarga tu index.html para compartirlo.";
+        } else {
+          const missing = PATHOLOGIES.filter(p => !getActivePhotoForPathology(p.id)).map(p => `#${p.id}`);
+          const previewMissing = missing.slice(0, 12).join(", ") + (missing.length > 12 ? "..." : "");
+          missingSummary.textContent = `Estado actual: ${loadedCount}/41 fotos cargadas. Faltan (${missing.length}): ${previewMissing}`;
+        }
+      }
+    }
+
+    /* Compresión inteligente de imagen para mantener nitidez clínica y peso ligero (< 4 MB las 41 fotos juntas) */
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 760;
+            let w = img.width;
+            let h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w >= h) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              } else {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", 0.80));
+          };
+          img.onerror = () => resolve(ev.target.result);
+          img.src = ev.target.result;
+        };
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleSingleUserPhotoUpload(pathId, inputEl) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      try {
+        const dataUrl = await compressImageFile(file);
+        await saveUserPhotoToDB(pathId, dataUrl);
+        renderPhotosManagerModal();
+        refreshCurrentViewAfterPhotoChange();
+        showToast(`✅ Foto #${pathId} guardada correctamente`, "emerald");
+      } catch (e) {
+        showToast("⚠️ Error al procesar la imagen", "rose");
+      } finally {
+        inputEl.value = "";
+      }
+    }
+
+    async function handleBulkUserPhotosUpload(inputEl) {
+      const files = Array.from((inputEl && inputEl.files) || []);
+      if (!files.length) return;
+
+      showToast(`⏳ Procesando ${files.length} fotografía(s)...`, "clinical");
+      files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+      let nextFreeId = 1;
+      const getNextAvailableId = () => {
+        while (nextFreeId <= PATHOLOGIES.length && getActivePhotoForPathology(nextFreeId)) {
+          nextFreeId++;
+        }
+        return nextFreeId <= PATHOLOGIES.length ? nextFreeId++ : null;
+      };
+
+      let savedCount = 0;
+      for (const file of files) {
+        try {
+          let targetId = matchFilenameToPathologyId(file.name, null);
+          if (!targetId) targetId = getNextAvailableId();
+          if (targetId && targetId >= 1 && targetId <= PATHOLOGIES.length) {
+            const dataUrl = await compressImageFile(file);
+            await saveUserPhotoToDB(targetId, dataUrl);
+            savedCount++;
+          }
+        } catch (err) {
+          console.warn("Archivo omitido:", file.name, err);
+        }
+      }
+
+      inputEl.value = "";
+      renderPhotosManagerModal();
+      refreshCurrentViewAfterPhotoChange();
+      const totalNow = PATHOLOGIES.filter(p => !!getActivePhotoForPathology(p.id)).length;
+      showToast(`✅ ${savedCount} foto(s) cargadas (${totalNow}/${PATHOLOGIES.length} en total)`, "emerald");
+    }
+
+    async function importPhotosFromPreviousHtml(inputEl) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const match = text.match(/const\s+EMBEDDED_USER_PHOTOS\s*=\s*(\{[\s\S]*?\});/);
+        if (!match) {
+          showToast("⚠️ Ese archivo HTML no contiene fotos incrustadas", "amber");
+          inputEl.value = "";
+          return;
+        }
+        const parsed = JSON.parse(match[1]);
+        const entries = Object.entries(parsed || {});
+        if (!entries.length) {
+          showToast("⚠️ El archivo HTML tenía 0 fotos incrustadas", "amber");
+          inputEl.value = "";
+          return;
+        }
+        let imported = 0;
+        for (const [k, dataUrl] of entries) {
+          const idNum = Number(k);
+          if (idNum >= 1 && idNum <= PATHOLOGIES.length && typeof dataUrl === "string" && dataUrl.startsWith("data:image")) {
+            await saveUserPhotoToDB(idNum, dataUrl);
+            imported++;
+          }
+        }
+        renderPhotosManagerModal();
+        refreshCurrentViewAfterPhotoChange();
+        showToast(`✅ Se recuperaron ${imported} fotografías del HTML anterior`, "emerald");
+      } catch (e) {
+        showToast("⚠️ No se pudieron leer las fotos del archivo HTML", "rose");
+      } finally {
+        inputEl.value = "";
+      }
+    }
+
+    function urlToDataUrlViaCanvas(url) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth || 640;
+            canvas.height = img.naturalHeight || 480;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL("image/jpeg", 0.82));
+          } catch (e) {
+            resolve(null);
+          }
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    async function exportHtmlWithEmbeddedPhotos() {
+      showToast("⏳ Preparando index.html con tus fotos incrustadas...", "clinical");
+      try {
+        const exportMap = {};
+        for (const p of PATHOLOGIES) {
+          const id = p.id;
+          if (userLoadedPhotosCache[id]) {
+            exportMap[id] = userLoadedPhotosCache[id];
+          } else if (detectedRepoPhotosCache[id]) {
+            const converted = await urlToDataUrlViaCanvas(detectedRepoPhotosCache[id]);
+            if (converted) exportMap[id] = converted;
+          }
+        }
+
+        const totalExported = Object.keys(exportMap).length;
+        if (totalExported === 0) {
+          showToast("⚠️ Primero agrega al menos 1 fotografía en 'Mis Fotos'", "amber");
+          openPhotosManagerModal();
+          return;
+        }
+
+        // Obtener el HTML fuente limpio de esta página
+        let htmlSource = "";
+        try {
+          if (window.location && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+            const resp = await fetch(window.location.href, { cache: "no-store" });
+            if (resp.ok) htmlSource = await resp.text();
+          }
+        } catch (e) {
+          htmlSource = "";
+        }
+
+        if (!htmlSource || !htmlSource.includes("EMBEDDED_USER_PHOTOS")) {
+          htmlSource = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        }
+
+        const safeJson = JSON.stringify(exportMap).replace(/<\/script/gi, "<\\/script");
+        const updatedHtml = htmlSource.replace(
+          /const\s+EMBEDDED_USER_PHOTOS\s*=\s*\{[\s\S]*?\};/,
+          `const EMBEDDED_USER_PHOTOS = ${safeJson};`
+        );
+
+        const blob = new Blob([updatedHtml], { type: "text/html;charset=utf-8" });
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = "index.html";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 4000);
+
+        showToast(`💾 ¡Descargado index.html con ${totalExported}/41 fotos! Súbelo a GitHub.`, "emerald");
+      } catch (err) {
+        console.error("Error exportando HTML:", err);
+        showToast("⚠️ No se pudo generar el archivo de descarga", "rose");
+      }
+    }
+
+    function openPhotosManagerModal() {
+      const modal = document.getElementById("photos-manager-modal");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      updatePhotosBadgeUI();
+      renderPhotosManagerModal();
+    }
+
+    function closePhotosManagerModal() {
+      const modal = document.getElementById("photos-manager-modal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function renderPhotosManagerModal() {
+      const container = document.getElementById("photos-manager-table");
+      if (!container) return;
+      const searchInput = document.getElementById("photos-modal-search");
+      const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
+
+      const filtered = PATHOLOGIES.filter(p => {
+        if (!query) return true;
+        return String(p.id) === query || p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+      });
+
+      container.innerHTML = filtered.map(p => {
+        const activePhoto = getActivePhotoForPathology(p.id);
+        const isUserSaved = !!userLoadedPhotosCache[p.id];
+        return `
+          <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 p-3 rounded-xl border ${activePhoto ? "border-emerald-300 dark:border-emerald-800/80 bg-emerald-50/40 dark:bg-emerald-950/20" : "border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40"}">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-16 h-14 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shrink-0 flex items-center justify-center">
+                ${activePhoto
+                  ? `<img src="${activePhoto}" alt="#${p.id}" onclick="openPhotoLightbox('${activePhoto.replace(/'/g, "\\'")}', '#${p.id}. ${escapeHtml(p.name)}')" class="w-full h-full object-cover cursor-zoom-in" />`
+                  : `<span class="text-xs font-extrabold text-slate-400">#${p.id}</span>`
+                }
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded-md bg-clinical-600 text-white text-[11px] font-extrabold">#${p.id}</span>
+                  <span class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">${escapeHtml(p.name)}</span>
+                  ${activePhoto
+                    ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-bold">${isUserSaved ? "Guardada ✓" : "En repositorio ✓"}</span>`
+                    : `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 text-[10px] font-bold">Sin foto personal</span>`
+                  }
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${escapeHtml(p.category)}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold transition">
+                <span>${activePhoto ? "🔄 Cambiar" : "📸 Agregar foto"}</span>
+                <input type="file" accept="image/*" onchange="handleSingleUserPhotoUpload(${p.id}, this)" class="hidden" />
+              </label>
+              ${isUserSaved ? `
+                <button type="button" onclick="removeUserPhotoFromDB(${p.id})" class="px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/70 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold transition" title="Eliminar foto">
+                  🗑️
+                </button>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openPhotoLightbox(src, title) {
+      const modal = document.getElementById("photo-lightbox-modal");
+      const img = document.getElementById("lightbox-img");
+      const titleEl = document.getElementById("lightbox-title");
+      if (!modal || !img) return;
+      img.src = src;
+      if (titleEl) titleEl.textContent = title || "Fotografía Clínica";
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closePhotoLightbox() {
+      const modal = document.getElementById("photo-lightbox-modal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    /* ==========================================================================
+       4. MOTOR VISUAL DE LÁMINAS CLÍNICAS / RADIOGRÁFICAS Y ESQUEMAS DIDÁCTICOS
+       ========================================================================== */
+    function handleImageFallback(imgEl, pathId) {
+      const asset = VISUAL_ASSETS[pathId] || {};
+      const canvas = document.createElement("canvas");
+      canvas.width = 640;
+      canvas.height = 380;
+      canvas.className = imgEl.className;
+      drawClinicalCanvasIllustration(canvas, pathId, asset);
+      if (imgEl.parentNode) {
+        imgEl.parentNode.replaceChild(canvas, imgEl);
+      }
+    }
+
+    function drawClinicalCanvasIllustration(canvas, pathId, asset) {
+      const ctx = canvas.getContext("2d");
+      const p = PATHOLOGIES.find(item => item.id === Number(pathId)) || PATHOLOGIES[0];
+      const type = asset.fallbackType || "clinical";
+
+      // Fondo según tipo (Radiografía oscura, Histología rosada H&E, Clínica mucosa oral)
+      if (type === "rx") {
+        const grad = ctx.createLinearGradient(0, 0, 640, 380);
+        grad.addColorStop(0, "#090d16");
+        grad.addColorStop(1, "#162033");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 640, 380);
+
+        // Hueso trabecular estilizado
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.14)";
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 640; i += 24) {
+          ctx.beginPath();
+          ctx.moveTo(i, 90);
+          ctx.lineTo(i + 18, 310);
+          ctx.stroke();
+        }
+        // Siluetas dentarias radiopacas
+        ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+        [210, 320, 430].forEach((x, idx) => {
+          ctx.beginPath();
+          ctx.roundRect(x - 24, 95, 48, 62, 12);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(x - 18, 155);
+          ctx.lineTo(x - 6, 255);
+          ctx.lineTo(x + 6, 255);
+          ctx.lineTo(x + 18, 155);
+          ctx.closePath();
+          ctx.fill();
+        });
+        // Área radiolúcida característica
+        ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(320, 255, 48, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else if (type === "histo") {
+        ctx.fillStyle = "#fdf2f8";
+        ctx.fillRect(0, 0, 640, 380);
+        // Acinos y agregados linfocíticos
+        for (let i = 0; i < 48; i++) {
+          ctx.fillStyle = i % 3 === 0 ? "rgba(126, 34, 206, 0.55)" : "rgba(236, 72, 153, 0.25)";
+          ctx.beginPath();
+          ctx.arc(120 + (i * 37) % 400, 95 + (i * 29) % 190, i % 3 === 0 ? 7 : 18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else {
+        // Lámina clínica de mucosa oral
+        const grad = ctx.createLinearGradient(0, 0, 640, 380);
+        grad.addColorStop(0, "#ffe4e6");
+        grad.addColorStop(1, "#fecdd3");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 640, 380);
+
+        // Arcada / mucosa estilizada
+        ctx.fillStyle = "#fda4af";
+        ctx.beginPath();
+        ctx.ellipse(320, 195, 215, 115, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Lesión focal representativa
+        const isPigmented = p.category.includes("Pigmentadas");
+        const isVascular = p.category.includes("Vasculares");
+        ctx.fillStyle = isPigmented ? "#451a03" : isVascular ? "#9f1239" : "#fb7185";
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(320, 195, 62, 42, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      // Etiqueta superior e inferior nítida
+      ctx.fillStyle = "rgba(15, 23, 42, 0.84)";
+      ctx.fillRect(0, 0, 640, 44);
+      ctx.fillStyle = "#38bdf8";
+      ctx.font = "bold 13px Inter, sans-serif";
+      ctx.fillText(`PATOLOGÍA #${p.id} · ${type === "rx" ? "ESQUEMA RADIOGRÁFICO" : type === "histo" ? "HISTOPATOLOGÍA" : "LÁMINA CLÍNICA"}`, 18, 27);
+
+      ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+      ctx.fillRect(0, 326, 640, 54);
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "bold 13px Inter, sans-serif";
+      const label = asset.fallbackLabel || p.name;
+      ctx.fillText(label.slice(0, 74), 18, 358);
+    }
+
+    function buildDidacticDiagramSvg(pathId) {
+      const p = PATHOLOGIES.find(item => item.id === Number(pathId)) || PATHOLOGIES[0];
+      const cat = p.category;
+      let accent = "#0f4c5c";
+      let shapeSvg = "";
+
+      if (cat.includes("Quistes")) {
+        accent = "#0284c7";
+        shapeSvg = `
+          <rect x="75" y="18" width="30" height="44" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+          <path d="M80 62 L90 105 L100 62 Z" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+          <circle cx="90" cy="108" r="24" fill="#0f172a" stroke="#38bdf8" stroke-width="3" stroke-dasharray="4 2"/>
+          <text x="90" y="112" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="bold">QUISTE</text>
+        `;
+      } else if (cat.includes("Tumores")) {
+        accent = "#7c3aed";
+        shapeSvg = `
+          <circle cx="72" cy="72" r="22" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+          <circle cx="104" cy="68" r="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+          <circle cx="88" cy="96" r="20" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+          <text x="90" y="132" text-anchor="middle" fill="#6d28d9" font-size="9" font-weight="bold">PATRÓN TUMORAL</text>
+        `;
+      } else if (cat.includes("Pigmentadas")) {
+        accent = "#92400e";
+        shapeSvg = `
+          <rect x="28" y="45" width="124" height="54" rx="14" fill="#fecdd3" stroke="#f43f5e" stroke-width="1.5"/>
+          <ellipse cx="90" cy="72" rx="34" ry="16" fill="#451a03" opacity="0.85"/>
+          <text x="90" y="122" text-anchor="middle" fill="#78350f" font-size="9" font-weight="bold">MELANINA / PIGMENTO</text>
+        `;
+      } else if (cat.includes("Vasculares")) {
+        accent = "#be123c";
+        shapeSvg = `
+          <path d="M30 85 Q60 40 90 85 T150 85" fill="none" stroke="#e11d48" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="90" cy="72" r="22" fill="#ffe4e6" stroke="#be123c" stroke-width="2.5"/>
+          <text x="90" y="126" text-anchor="middle" fill="#be123c" font-size="9" font-weight="bold">LESIÓN VASCULAR</text>
+        `;
+      } else {
+        accent = "#0d9488";
+        shapeSvg = `
+          <path d="M25 98 Q90 98 155 98" stroke="#94a3b8" stroke-width="3" fill="none"/>
+          <path d="M55 98 C55 48, 125 48, 125 98 Z" fill="#ccfbf1" stroke="#0d9488" stroke-width="2.5"/>
+          <text x="90" y="124" text-anchor="middle" fill="#0f766e" font-size="9" font-weight="bold">LESIÓN MUCOSA</text>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 180 142" class="w-full h-36 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+          ${shapeSvg}
+        </svg>
+      `;
+    }
+
+    function renderPathologyVisualsBlock(pathId, compact = false) {
+      const idNum = Number(pathId);
+      const p = PATHOLOGIES.find(item => item.id === idNum) || PATHOLOGIES[0];
+      const asset = VISUAL_ASSETS[idNum] || {};
+      const activeUserPhoto = getActivePhotoForPathology(idNum);
+      const primaryImgSrc = activeUserPhoto || asset.realUrl || "";
+      const safeTitle = `#${p.id}. ${p.name}`.replace(/'/g, "\\'");
+
+      return `
+        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-clinical-600 dark:text-cyan-400">
+              📸 Fotografía Clínica e Ilustración de Estudio
+            </span>
+            <div class="flex items-center gap-1.5">
+              <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition">
+                <span>📸 ${activeUserPhoto ? "Cambiar foto" : "Subir mi foto"}</span>
+                <input type="file" accept="image/*" onchange="handleSingleUserPhotoUpload(${p.id}, this)" class="hidden" />
+              </label>
+              ${primaryImgSrc ? `
+                <button type="button" onclick="openPhotoLightbox('${primaryImgSrc.replace(/'/g, "\\'")}', '${safeTitle}')" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-clinical-100 text-slate-700 dark:text-slate-200 text-[11px] font-bold transition">
+                  🔍 Ampliar
+                </button>
+              ` : ""}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 ${compact ? "sm:grid-cols-2" : "md:grid-cols-2"} gap-3">
+            <!-- Tarjeta 1: Foto Clínica / Referencia -->
+            <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-2.5 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                <span class="text-slate-700 dark:text-slate-200">Foto de la Patología (#${p.id})</span>
+                <span class="px-2 py-0.5 rounded-full ${activeUserPhoto ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" : "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300"} text-[10px]">
+                  ${activeUserPhoto ? "Foto Real" : "Referencia"}
+                </span>
+              </div>
+              <div class="w-full h-36 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-900 flex items-center justify-center">
+                ${primaryImgSrc
+                  ? `<img src="${primaryImgSrc}" alt="${escapeHtml(p.name)}" onclick="openPhotoLightbox('${primaryImgSrc.replace(/'/g, "\\'")}', '${safeTitle}')" onerror="handleImageFallback(this, ${p.id})" class="w-full h-full object-cover cursor-zoom-in" />`
+                  : `<img src="invalid://fallback" alt="${escapeHtml(p.name)}" onerror="handleImageFallback(this, ${p.id})" class="w-full h-full object-cover" />`
+                }
+              </div>
+              <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1.5 leading-snug">
+                ${escapeHtml(asset.realCaption || p.clinical)}
+              </p>
+            </div>
+
+            <!-- Tarjeta 2: Esquema Didáctico -->
+            <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-2.5 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                <span class="text-slate-700 dark:text-slate-200">Esquema Didáctico</span>
+                <span class="px-2 py-0.5 rounded-full bg-clinical-100 text-clinical-700 dark:bg-cyan-950 dark:text-cyan-300 text-[10px]">
+                  Clave Examen
+                </span>
+              </div>
+              ${buildDidacticDiagramSvg(p.id)}
+              <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1.5 leading-snug">
+                ${escapeHtml(asset.aiCaption || p.examTip)}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       5. ESTADO GLOBAL, AUDIO WEB API, NOTIFICACIONES Y PERSISTENCIA
+       ========================================================================== */
+    const STORAGE_KEY = "patologia_bucal_guia_v3";
+    let appState = {
+      activeTab: "quiz",
+      selectedUnit: "all",
+      xp: 0,
+      streak: 0,
+      masteredIds: [],
+      darkMode: false,
+      guideSearch: "",
+      guideFilter: "all",
+      // Quiz state
+      quizQuestions: [],
+      quizIndex: 0,
+      quizScore: 0,
+      quizAnswered: false,
+      // Hangman state
+      hmTarget: null,
+      hmGuessed: [],
+      hmLives: 6,
+      // Flashcards state
+      fcIndex: 0,
+      fcFlipped: false,
+      // Cases state
+      caseIndex: 0,
+      caseAnswered: false,
+      caseShowClue: false,
+      // Match state
+      matchPairs: [],
+      matchSelectedLeft: null,
+      matchSelectedRight: null,
+      matchSolvedIds: []
+    };
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.warn("No se pudo leer estado previo:", e);
+      }
+      if (appState.darkMode) {
+        document.documentElement.classList.add("dark");
+      }
+    }
+
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          activeTab: appState.activeTab,
+          selectedUnit: appState.selectedUnit,
+          xp: appState.xp,
+          streak: appState.streak,
+          masteredIds: appState.masteredIds,
+          darkMode: appState.darkMode
+        }));
+      } catch (e) {
+        console.warn("Error guardando progreso:", e);
+      }
+      updateHeaderStatsUI();
+    }
+
+    function playToneFeedback(type) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+
+        if (type === "success") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        } else {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(175, now + 0.1);
+          gain.gain.setValueAtTime(0.09, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        }
+      } catch (e) {
+        // Silencioso si el navegador bloquea autoplay de audio
+      }
+    }
+
+    function showToast(message, color = "clinical") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const colorClasses = {
+        clinical: "bg-clinical-700 text-white border-clinical-500",
+        emerald: "bg-emerald-600 text-white border-emerald-400",
+        amber: "bg-amber-600 text-white border-amber-400",
+        rose: "bg-rose-600 text-white border-rose-400"
+      };
+      const el = document.createElement("div");
+      el.className = `px-4 py-2.5 rounded-xl border shadow-lg text-xs sm:text-sm font-bold animate-fade-in ${colorClasses[color] || colorClasses.clinical}`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.transition = "opacity 0.25s ease";
+        setTimeout(() => el.remove(), 260);
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getFilteredPathologies() {
+      if (appState.selectedUnit === "all") return PATHOLOGIES;
+      return PATHOLOGIES.filter(p => p.category === appState.selectedUnit);
+    }
+
+    function updateHeaderStatsUI() {
+      const xpEl = document.getElementById("stat-xp");
+      const streakEl = document.getElementById("stat-streak");
+      const masteredEl = document.getElementById("stat-mastered");
+      const fillEl = document.getElementById("mastery-progress-fill");
+      const countLabel = document.getElementById("unit-count-label");
+
+      if (xpEl) xpEl.textContent = appState.xp;
+      if (streakEl) streakEl.textContent = appState.streak;
+      const mCount = appState.masteredIds.length;
+      if (masteredEl) masteredEl.textContent = `${mCount} / ${PATHOLOGIES.length}`;
+      if (fillEl) fillEl.style.width = `${Math.round((mCount / PATHOLOGIES.length) * 100)}%`;
+      if (countLabel) {
+        const filtered = getFilteredPathologies();
+        countLabel.textContent = `Mostrando: ${filtered.length} patología${filtered.length === 1 ? "" : "s"}`;
+      }
+    }
+
+    function renderUnitPills() {
+      const container = document.getElementById("unit-pills-container");
+      if (!container) return;
+      container.innerHTML = CATEGORIES.map(cat => {
+        const active = appState.selectedUnit === cat.id;
+        return `
+          <button type="button" onclick="selectUnitFilter('${cat.id.replace(/'/g, "\\'")}')" class="px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition ${
+            active
+              ? "bg-clinical-600 text-white border-clinical-600 shadow-sm"
+              : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-clinical-500"
+          }">
+            ${escapeHtml(cat.name)}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectUnitFilter(unitId) {
+      appState.selectedUnit = unitId;
+      appState.fcIndex = 0;
+      appState.fcFlipped = false;
+      appState.caseIndex = 0;
+      appState.caseAnswered = false;
+      appState.caseShowClue = false;
+      initQuizRound(false);
+      initHangmanRound(false);
+      initMatchRound(false);
+      saveAppState();
+      renderUnitPills();
+      renderActiveView();
+    }
+
+    function switchTab(tabId) {
+      appState.activeTab = tabId;
+      document.querySelectorAll(".mode-tab").forEach(btn => {
+        const isCurrent = btn.dataset.tab === tabId;
+        btn.className = `mode-tab flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl text-xs font-bold transition ${
+          isCurrent
+            ? "bg-clinical-600 text-white shadow-sm"
+            : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+        }`;
+      });
+      saveAppState();
+      renderActiveView();
+    }
+
+    function refreshCurrentViewAfterPhotoChange() {
+      renderActiveView();
+    }
+
+    function renderActiveView() {
+      const tab = appState.activeTab;
+      if (tab === "quiz") renderQuizView();
+      else if (tab === "hangman") renderHangmanView();
+      else if (tab === "flashcards") renderFlashcardsView();
+      else if (tab === "cases") renderCasesView();
+      else if (tab === "match") renderMatchView();
+      else if (tab === "maps") renderMapsView();
+      else if (tab === "synoptic") renderSynopticView();
+      else renderGuideView();
+    }
+
+    /* ==========================================================================
+       6. MODO 1: QUIZ EXAMEN
+       ========================================================================== */
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function initQuizRound(shouldRender = true) {
+      const pool = appState.selectedUnit === "all"
+        ? QUIZ_BANK
+        : QUIZ_BANK.filter(q => q.category === appState.selectedUnit);
+      appState.quizQuestions = shuffleArray(pool.length ? pool : QUIZ_BANK).slice(0, 12);
+      appState.quizIndex = 0;
+      appState.quizScore = 0;
+      appState.quizAnswered = false;
+      if (shouldRender) renderQuizView();
+    }
+
+    function renderQuizView() {
+      const container = document.getElementById("view-container");
+      if (!appState.quizQuestions || !appState.quizQuestions.length) {
+        initQuizRound(false);
+      }
+
+      if (appState.quizIndex >= appState.quizQuestions.length) {
+        const total = appState.quizQuestions.length;
+        const pct = Math.round((appState.quizScore / total) * 100);
+        container.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 text-center max-w-2xl mx-auto shadow-sm animate-fade-in">
+            <div class="text-5xl mb-3">${pct >= 80 ? "🏆" : pct >= 60 ? "👏" : "📚"}</div>
+            <h2 class="text-2xl font-extrabold mb-2">¡Ronda de Examen Completada!</h2>
+            <p class="text-slate-600 dark:text-slate-300 text-sm mb-4">
+              Obtuviste <strong>${appState.quizScore} de ${total}</strong> aciertos (${pct}%).
+            </p>
+            <button type="button" onclick="initQuizRound(true)" class="px-6 py-3 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white font-bold text-sm shadow transition">
+              🔄 Iniciar Nueva Ronda
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const q = appState.quizQuestions[appState.quizIndex];
+      const visualHtml = q.isVisualCase && q.visualPathId
+        ? `<div class="mb-4">${renderPathologyVisualsBlock(q.visualPathId, true)}</div>`
+        : "";
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 max-w-3xl mx-auto shadow-sm animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <span class="px-3 py-1 rounded-full bg-clinical-100 dark:bg-cyan-950 text-clinical-700 dark:text-cyan-300 text-xs font-bold">
+              ${escapeHtml(q.category)}
+            </span>
+            <span class="text-xs font-extrabold text-slate-500 dark:text-slate-400">
+              Pregunta ${appState.quizIndex + 1} de ${appState.quizQuestions.length} · Aciertos: ${appState.quizScore}
+            </span>
+          </div>
+
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-4 leading-snug">
+            ${escapeHtml(q.question)}
+          </h2>
+
+          ${visualHtml}
+
+          <div id="quiz-options-list" class="space-y-2.5">
+            ${q.options.map((opt, idx) => `
+              <button type="button" onclick="answerQuizOption(${idx})" class="quiz-opt-btn w-full text-left p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-clinical-500 bg-slate-50/70 dark:bg-slate-800/50 text-xs sm:text-sm font-semibold transition flex items-start gap-3">
+                <span class="w-6 h-6 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-xs font-extrabold shrink-0">
+                  ${String.fromCharCode(65 + idx)}
+                </span>
+                <span>${escapeHtml(opt)}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div id="quiz-feedback-box" class="hidden mt-4 p-4 rounded-xl border text-xs sm:text-sm"></div>
+        </div>
+      `;
+    }
+
+    function answerQuizOption(selectedIdx) {
+      if (appState.quizAnswered) return;
+      appState.quizAnswered = true;
+      const q = appState.quizQuestions[appState.quizIndex];
+      const isCorrect = selectedIdx === q.correct;
+
+      const btns = document.querySelectorAll(".quiz-opt-btn");
+      btns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.correct) {
+          btn.classList.add("border-emerald-500", "bg-emerald-50", "dark:bg-emerald-950/50", "text-emerald-900", "dark:text-emerald-200");
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.classList.add("border-rose-500", "bg-rose-50", "dark:bg-rose-950/50", "text-rose-900", "dark:text-rose-200");
+        }
+      });
+
+      if (isCorrect) {
+        appState.quizScore++;
+        appState.xp += 15;
+        appState.streak++;
+        playToneFeedback("success");
+      } else {
+        appState.streak = 0;
+        playToneFeedback("error");
+      }
+      saveAppState();
+
+      const fb = document.getElementById("quiz-feedback-box");
+      if (fb) {
+        fb.classList.remove("hidden");
+        fb.className = `mt-4 p-4 rounded-xl border text-xs sm:text-sm animate-fade-in ${
+          isCorrect
+            ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200"
+            : "bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200"
+        }`;
+        fb.innerHTML = `
+          <p class="font-extrabold mb-1">${isCorrect ? "✅ ¡Correcto! (+15 XP)" : "❌ Respuesta incorrecta"}</p>
+          <p class="mb-3">${escapeHtml(q.explanation)}</p>
+          <button type="button" onclick="nextQuizQuestion()" class="px-4 py-2 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold">
+            Siguiente Pregunta →
+          </button>
+        `;
+      }
+    }
+
+    function nextQuizQuestion() {
+      appState.quizIndex++;
+      appState.quizAnswered = false;
+      renderQuizView();
+    }
+
+    /* ==========================================================================
+       7. MODO 2: ADIVINA LA PALABRA (AHORCADO CLÍNICO)
+       ========================================================================== */
+    function initHangmanRound(shouldRender = true) {
+      const pool = getFilteredPathologies();
+      const target = pool[Math.floor(Math.random() * pool.length)] || PATHOLOGIES[0];
+      appState.hmTarget = target;
+      appState.hmGuessed = [];
+      appState.hmLives = 6;
+      if (shouldRender) renderHangmanView();
+    }
+
+    function renderHangmanView() {
+      const container = document.getElementById("view-container");
+      if (!appState.hmTarget) initHangmanRound(false);
+
+      const p = appState.hmTarget;
+      const word = p.hangmanWord.toUpperCase();
+      const letters = word.split("");
+      const uniqueLetters = [...new Set(letters.filter(ch => /[A-ZÑ]/.test(ch)))];
+      const won = uniqueLetters.every(ch => appState.hmGuessed.includes(ch));
+      const lost = appState.hmLives <= 0;
+
+      const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 max-w-3xl mx-auto shadow-sm animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <span class="px-3 py-1 rounded-full bg-clinical-100 dark:bg-cyan-950 text-clinical-700 dark:text-cyan-300 text-xs font-bold">
+              ${escapeHtml(p.category)}
+            </span>
+            <span class="text-xs font-extrabold text-rose-600 dark:text-rose-400">
+              Intentos restantes: ${"❤️".repeat(Math.max(0, appState.hmLives))}${"🤍".repeat(Math.max(0, 6 - appState.hmLives))}
+            </span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 mb-5">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300 mb-1">💡 Pista Clínica / Examen</p>
+            <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-200">${escapeHtml(p.examTip)}</p>
+          </div>
+
+          <!-- Palabra oculta -->
+          <div class="flex flex-wrap justify-center gap-2 my-6">
+            ${letters.map(ch => {
+              if (ch === " ") return `<div class="w-5"></div>`;
+              const revealed = won || lost || appState.hmGuessed.includes(ch);
+              return `
+                <div class="w-9 h-11 sm:w-10 sm:h-12 rounded-xl border-2 flex items-center justify-center text-base sm:text-lg font-extrabold ${
+                  revealed
+                    ? won
+                      ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300"
+                      : lost && !appState.hmGuessed.includes(ch)
+                        ? "border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300"
+                        : "border-clinical-600 bg-clinical-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                    : "border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50"
+                }">
+                  ${revealed ? ch : ""}
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          ${won || lost ? `
+            <div class="p-4 rounded-xl border mb-4 text-center ${
+              won
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200"
+                : "bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200"
+            }">
+              <p class="font-extrabold text-sm sm:text-base mb-1">
+                ${won ? "🎉 ¡Excelente! +20 XP" : `❌ La respuesta era: ${escapeHtml(p.name)}`}
+              </p>
+              <p class="text-xs mb-3">${escapeHtml(p.clinical)}</p>
+              <button type="button" onclick="initHangmanRound(true)" class="px-5 py-2.5 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold">
+                Siguiente Patología →
+              </button>
+            </div>
+          ` : `
+            <div class="flex flex-wrap justify-center gap-1.5 sm:gap-2">
+              ${alphabet.map(ch => {
+                const used = appState.hmGuessed.includes(ch);
+                const isHit = used && word.includes(ch);
+                return `
+                  <button type="button" ${used ? "disabled" : ""} onclick="guessHangmanLetter('${ch}')" class="w-9 h-10 sm:w-10 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm border transition ${
+                    used
+                      ? isHit
+                        ? "bg-emerald-600 text-white border-emerald-600 opacity-90"
+                        : "bg-slate-200 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-800 opacity-50"
+                      : "bg-white dark:bg-slate-800 hover:bg-clinical-600 hover:text-white border-slate-300 dark:border-slate-700"
+                  }">
+                    ${ch}
+                  </button>
+                `;
+              }).join("")}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function guessHangmanLetter(ch) {
+      if (!appState.hmTarget || appState.hmLives <= 0) return;
+      ch = ch.toUpperCase();
+      if (appState.hmGuessed.includes(ch)) return;
+      appState.hmGuessed.push(ch);
+
+      const word = appState.hmTarget.hangmanWord.toUpperCase();
+      if (word.includes(ch)) {
+        playToneFeedback("success");
+        const uniqueLetters = [...new Set(word.split("").filter(c => /[A-ZÑ]/.test(c)))];
+        if (uniqueLetters.every(c => appState.hmGuessed.includes(c))) {
+          appState.xp += 20;
+          appState.streak++;
+          saveAppState();
+        }
+      } else {
+        appState.hmLives--;
+        playToneFeedback("error");
+        if (appState.hmLives <= 0) {
+          appState.streak = 0;
+          saveAppState();
+        }
+      }
+      renderHangmanView();
+    }
+
+    /* ==========================================================================
+       8. MODO 3: FLASHCARDS INTERACTIVAS 3D
+       ========================================================================== */
+    function renderFlashcardsView() {
+      const container = document.getElementById("view-container");
+      const list = getFilteredPathologies();
+      if (appState.fcIndex >= list.length) appState.fcIndex = 0;
+      const p = list[appState.fcIndex];
+      const isMastered = appState.masteredIds.includes(p.id);
+
+      container.innerHTML = `
+        <div class="max-w-3xl mx-auto animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-xs font-extrabold text-slate-500 dark:text-slate-400">
+              Tarjeta ${appState.fcIndex + 1} de ${list.length} · Toca la tarjeta para voltear
+            </span>
+            <button type="button" onclick="toggleMasteredPathology(${p.id})" class="px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${
+              isMastered
+                ? "bg-emerald-600 text-white border-emerald-600"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
+            }">
+              ${isMastered ? "🎓 Dominada" : "☆ Marcar como Dominada"}
+            </button>
+          </div>
+
+          <div onclick="flipFlashcard()" class="cursor-pointer bg-white dark:bg-slate-900 rounded-2xl border-2 ${appState.fcFlipped ? "border-clinical-600" : "border-slate-200 dark:border-slate-800"} p-6 sm:p-8 shadow-md transition">
+            ${!appState.fcFlipped ? `
+              <div class="text-center py-6">
+                <span class="inline-block px-3 py-1 rounded-full bg-clinical-100 dark:bg-cyan-950 text-clinical-700 dark:text-cyan-300 text-xs font-bold mb-3">
+                  #${p.id} · ${escapeHtml(p.category)}
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+                  ${escapeHtml(p.name)}
+                </h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  Haz clic aquí para revelar etiología, clínica, radiografía, tratamiento y foto 🔄
+                </p>
+              </div>
+            ` : `
+              <div class="space-y-3 text-xs sm:text-sm animate-fade-in" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                  <h3 class="font-extrabold text-base text-clinical-700 dark:text-cyan-300">#${p.id}. ${escapeHtml(p.name)}</h3>
+                  <button type="button" onclick="flipFlashcard()" class="text-xs font-bold text-slate-500 hover:text-clinical-600">↩ Volver al frente</button>
+                </div>
+                <p><strong>🧬 Etiología:</strong> ${escapeHtml(p.etiology)}</p>
+                <p><strong>📍 Localización:</strong> ${escapeHtml(p.location)}</p>
+                <p><strong>🩺 Clínica:</strong> ${escapeHtml(p.clinical)}</p>
+                <p><strong>☢️ Radiografía:</strong> ${escapeHtml(p.radiographic)}</p>
+                <p><strong>💊 Tratamiento:</strong> ${escapeHtml(p.treatment)}</p>
+                <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 font-semibold">
+                  ⭐ Perla de Examen: ${escapeHtml(p.examTip)}
+                </div>
+                ${renderPathologyVisualsBlock(p.id, true)}
+              </div>
+            `}
+          </div>
+
+          <div class="flex items-center justify-between gap-3 mt-4">
+            <button type="button" onclick="moveFlashcard(-1)" class="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-bold text-xs sm:text-sm hover:border-clinical-500">
+              ← Anterior
+            </button>
+            <button type="button" onclick="flipFlashcard()" class="px-5 py-2.5 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white font-bold text-xs sm:text-sm">
+              🔄 Voltear Tarjeta
+            </button>
+            <button type="button" onclick="moveFlashcard(1)" class="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-bold text-xs sm:text-sm hover:border-clinical-500">
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function flipFlashcard() {
+      appState.fcFlipped = !appState.fcFlipped;
+      renderFlashcardsView();
+    }
+
+    function moveFlashcard(delta) {
+      const list = getFilteredPathologies();
+      appState.fcIndex = (appState.fcIndex + delta + list.length) % list.length;
+      appState.fcFlipped = false;
+      renderFlashcardsView();
+    }
+
+    /* ==========================================================================
+       9. MODO 4: CASOS CLÍNICOS
+       ========================================================================== */
+    function renderCasesView() {
+      const container = document.getElementById("view-container");
+      const pool = appState.selectedUnit === "all"
+        ? CLINICAL_CASES
+        : CLINICAL_CASES.filter(c => c.category === appState.selectedUnit);
+      const list = pool.length ? pool : CLINICAL_CASES;
+      if (appState.caseIndex >= list.length) appState.caseIndex = 0;
+      const c = list[appState.caseIndex];
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 max-w-3xl mx-auto shadow-sm animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <span class="px-3 py-1 rounded-full bg-clinical-100 dark:bg-cyan-950 text-clinical-700 dark:text-cyan-300 text-xs font-bold">
+              Caso Clínico ${appState.caseIndex + 1} de ${list.length} · ${escapeHtml(c.category)}
+            </span>
+            <button type="button" onclick="toggleCaseClue()" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline">
+              ${appState.caseShowClue ? "Ocultar pista" : "💡 Ver pista clave"}
+            </button>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 mb-4">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-clinical-600 dark:text-cyan-400 mb-1">
+              Paciente: ${escapeHtml(c.patient)}
+            </p>
+            <p class="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed">
+              ${escapeHtml(c.presentation)}
+            </p>
+            ${appState.caseShowClue ? `
+              <p class="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs font-bold text-amber-700 dark:text-amber-300">
+                🔑 Pista: ${escapeHtml(c.clue)}
+              </p>
+            ` : ""}
+          </div>
+
+          <div class="space-y-2.5">
+            ${c.options.map((opt, idx) => `
+              <button type="button" onclick="answerClinicalCase(${idx})" class="case-opt-btn w-full text-left p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-clinical-500 bg-white dark:bg-slate-800/40 text-xs sm:text-sm font-bold transition">
+                ${escapeHtml(opt)}
+              </button>
+            `).join("")}
+          </div>
+
+          <div id="case-feedback-box" class="hidden mt-4"></div>
+        </div>
+      `;
+    }
+
+    function toggleCaseClue() {
+      appState.caseShowClue = !appState.caseShowClue;
+      renderCasesView();
+    }
+
+    function answerClinicalCase(idx) {
+      if (appState.caseAnswered) return;
+      appState.caseAnswered = true;
+      const pool = appState.selectedUnit === "all"
+        ? CLINICAL_CASES
+        : CLINICAL_CASES.filter(c => c.category === appState.selectedUnit);
+      const list = pool.length ? pool : CLINICAL_CASES;
+      const c = list[appState.caseIndex];
+      const isCorrect = idx === c.correct;
+
+      document.querySelectorAll(".case-opt-btn").forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === c.correct) {
+          btn.classList.add("border-emerald-500", "bg-emerald-50", "dark:bg-emerald-950/50", "text-emerald-900", "dark:text-emerald-200");
+        } else if (i === idx && !isCorrect) {
+          btn.classList.add("border-rose-500", "bg-rose-50", "dark:bg-rose-950/50", "text-rose-900", "dark:text-rose-200");
+        }
+      });
+
+      if (isCorrect) {
+        appState.xp += 20;
+        appState.streak++;
+        playToneFeedback("success");
+      } else {
+        appState.streak = 0;
+        playToneFeedback("error");
+      }
+      saveAppState();
+
+      const fb = document.getElementById("case-feedback-box");
+      if (fb) {
+        fb.classList.remove("hidden");
+        fb.innerHTML = `
+          <div class="p-4 rounded-xl border ${isCorrect ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300" : "bg-rose-50 dark:bg-rose-950/40 border-rose-300"} text-xs sm:text-sm">
+            <p class="font-extrabold mb-1">${isCorrect ? "✅ ¡Diagnóstico acertado! (+20 XP)" : `❌ Diagnóstico correcto: ${escapeHtml(c.options[c.correct])}`}</p>
+            <p class="mb-3">Clave diagnóstica: ${escapeHtml(c.clue)}</p>
+            <button type="button" onclick="nextClinicalCase()" class="px-4 py-2 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold">
+              Siguiente Caso →
+            </button>
+          </div>
+          ${c.visualPathId ? renderPathologyVisualsBlock(c.visualPathId, true) : ""}
+        `;
+      }
+    }
+
+    function nextClinicalCase() {
+      const pool = appState.selectedUnit === "all"
+        ? CLINICAL_CASES
+        : CLINICAL_CASES.filter(c => c.category === appState.selectedUnit);
+      const list = pool.length ? pool : CLINICAL_CASES;
+      appState.caseIndex = (appState.caseIndex + 1) % list.length;
+      appState.caseAnswered = false;
+      appState.caseShowClue = false;
+      renderCasesView();
+    }
+
+    /* ==========================================================================
+       10. MODO 5: CONECTA PARES
+       ========================================================================== */
+    function initMatchRound(shouldRender = true) {
+      const pool = getFilteredPathologies();
+      const chosen = shuffleArray(pool.length >= 5 ? pool : PATHOLOGIES).slice(0, 5);
+      appState.matchPairs = chosen;
+      appState.matchSelectedLeft = null;
+      appState.matchSelectedRight = null;
+      appState.matchSolvedIds = [];
+      appState.matchRightShuffled = shuffleArray(chosen.map(p => ({ id: p.id, tip: p.examTip })));
+      if (shouldRender) renderMatchView();
+    }
+
+    function renderMatchView() {
+      const container = document.getElementById("view-container");
+      if (!appState.matchPairs || !appState.matchPairs.length) initMatchRound(false);
+
+      const allDone = appState.matchSolvedIds.length === appState.matchPairs.length;
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 max-w-4xl mx-auto shadow-sm animate-fade-in">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold">🔗 Conecta cada Patología con su Perla de Examen</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Selecciona una patología de la izquierda y su característica clave a la derecha.</p>
+            </div>
+            <button type="button" onclick="initMatchRound(true)" class="px-3.5 py-2 rounded-xl bg-clinical-600 hover:bg-clinical-500 text-white text-xs font-bold">
+              🔄 Nuevos 5 Pares
+            </button>
+          </div>
+
+          ${allDone ? `
+            <div class="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-center my-4">
+              <p class="text-lg font-extrabold text-emerald-800 dark:text-emerald-200 mb-2">🎉 ¡Todos los pares conectados! (+25 XP)</p>
+              <button type="button" onclick="initMatchRound(true)" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+                Jugar Otra Ronda
+              </button>
+            </div>
+          ` : `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2.5">
+                ${appState.matchPairs.map(p => {
+                  const solved = appState.matchSolvedIds.includes(p.id);
+                  const selected = appState.matchSelectedLeft === p.id;
+                  return `
+                    <button type="button" ${solved ? "disabled" : ""} onclick="selectMatchSide('left', ${p.id})" class="w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-extrabold transition ${
+                      solved
+                        ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 opacity-60"
+                        : selected
+                          ? "border-clinical-600 bg-clinical-50 dark:bg-cyan-950/60 ring-2 ring-clinical-500"
+                          : "border-slate-200 dark:border-slate-700 hover:border-clinical-500 bg-slate-50 dark:bg-slate-800/50"
+                    }">
+                      #${p.id}. ${escapeHtml(p.name)}
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+
+              <div class="space-y-2.5">
+                ${(appState.matchRightShuffled || []).map(item => {
+                  const solved = appState.matchSolvedIds.includes(item.id);
+                  const selected = appState.matchSelectedRight === item.id;
+                  return `
+                    <button type="button" ${solved ? "disabled" : ""} onclick="selectMatchSide('right', ${item.id})" class="w-full text-left p-3.5 rounded-xl border text-xs font-semibold transition ${
+                      solved
+                        ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 opacity-60"
+                        : selected
+                          ? "border-clinical-600 bg-clinical-50 dark:bg-cyan-950/60 ring-2 ring-clinical-500"
+                          : "border-slate-200 dark:border-slate-700 hover:border-clinical-500 bg-white dark:bg-slate-800/40"
+                    }">
+                      ${escapeHtml(item.tip)}
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function selectMatchSide(side, id) {
+      if (side === "left") appState.matchSelectedLeft = id;
+      else appState.matchSelectedRight = id;
+
+      if (appState.matchSelectedLeft && appState.matchSelectedRight) {
+        if (appState.matchSelectedLeft === appState.matchSelectedRight) {
+          appState.matchSolvedIds.push(id);
+          playToneFeedback("success");
+          if (appState.matchSolvedIds.length === appState.matchPairs.length) {
+            appState.xp += 25;
+            appState.streak++;
+            saveAppState();
+          }
+        } else {
+          playToneFeedback("error");
+          showToast("❌ No coinciden, intenta de nuevo", "rose");
+        }
+        appState.matchSelectedLeft = null;
+        appState.matchSelectedRight = null;
+      }
+      renderMatchView();
+    }
+
+    /* ==========================================================================
+       11. MODO 6: MAPAS CONCEPTUALES & MODO 7: CUADROS SINÓPTICOS
+       ========================================================================== */
+    function renderMapsView() {
+      const container = document.getElementById("view-container");
+      const units = CATEGORIES.filter(c => c.id !== "all" && (appState.selectedUnit === "all" || appState.selectedUnit === c.id));
+
+      container.innerHTML = `
+        <div class="space-y-5 animate-fade-in">
+          ${units.map(u => {
+            const items = PATHOLOGIES.filter(p => p.category === u.id);
+            return `
+              <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                <div class="flex items-center justify-between gap-2 mb-4">
+                  <span class="px-3.5 py-1.5 rounded-xl bg-clinical-600 text-white text-xs sm:text-sm font-extrabold">
+                    🗺️ ${escapeHtml(u.name)} (${items.length} entidades)
+                  </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  ${items.map(p => `
+                    <div onclick="openPathologyDetailModal(${p.id})" class="cursor-pointer p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-clinical-500 bg-slate-50/70 dark:bg-slate-800/50 transition">
+                      <p class="text-xs font-extrabold text-clinical-700 dark:text-cyan-300 mb-1">#${p.id}. ${escapeHtml(p.name)}</p>
+                      <p class="text-[11px] text-slate-600 dark:text-slate-300 line-clamp-2">${escapeHtml(p.examTip)}</p>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderSynopticView() {
+      const container = document.getElementById("view-container");
+      const units = CATEGORIES.filter(c => c.id !== "all" && (appState.selectedUnit === "all" || appState.selectedUnit === c.id));
+
+      container.innerHTML = `
+        <div class="space-y-5 animate-fade-in">
+          ${units.map(u => {
+            const items = PATHOLOGIES.filter(p => p.category === u.id);
+            return `
+              <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm overflow-x-auto">
+                <div class="flex items-center gap-3 min-w-[600px]">
+                  <div class="w-48 shrink-0 p-3.5 rounded-xl bg-clinical-600 text-white font-extrabold text-xs sm:text-sm text-center shadow">
+                    ${escapeHtml(u.name)}
+                  </div>
+                  <div class="text-3xl font-light text-clinical-500 select-none">{</div>
+                  <div class="flex-1 space-y-2">
+                    ${items.map(p => `
+                      <div onclick="openPathologyDetailModal(${p.id})" class="cursor-pointer p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-clinical-50 dark:hover:bg-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span class="font-extrabold text-slate-900 dark:text-white">#${p.id}. ${escapeHtml(p.name)}</span>
+                        <span class="text-slate-600 dark:text-slate-300">${escapeHtml(p.examTip)}</span>
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function openPathologyDetailModal(pathId) {
+      const p = PATHOLOGIES.find(item => item.id === Number(pathId));
+      if (!p) return;
+      const modal = document.getElementById("visual-modal");
+      document.getElementById("vm-cat").textContent = p.category;
+      document.getElementById("vm-title").textContent = `#${p.id}. ${p.name}`;
+      document.getElementById("vm-body").innerHTML = `
+        <div class="space-y-3 text-xs sm:text-sm">
+          <p><strong>🧬 Etiología:</strong> ${escapeHtml(p.etiology)}</p>
+          <p><strong>📍 Localización:</strong> ${escapeHtml(p.location)}</p>
+          <p><strong>🩺 Clínica:</strong> ${escapeHtml(p.clinical)}</p>
+          <p><strong>☢️ Radiografía:</strong> ${escapeHtml(p.radiographic)}</p>
+          <p><strong>💊 Tratamiento:</strong> ${escapeHtml(p.treatment)}</p>
+          <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 font-semibold">
+            ⭐ Perla de Examen: ${escapeHtml(p.examTip)}
+          </div>
+          ${renderPathologyVisualsBlock(p.id, true)}
+        </div>
+      `;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    /* ==========================================================================
+       12. MODO 8: GUÍA RÁPIDA DE APUNTES (41 PATOLOGÍAS)
+       ========================================================================== */
+    function renderGuideView() {
+      const container = document.getElementById("view-container");
+      const baseList = getFilteredPathologies();
+      const q = (appState.guideSearch || "").trim().toLowerCase();
+
+      const filtered = baseList.filter(p => {
+        if (appState.guideFilter === "mastered" && !appState.masteredIds.includes(p.id)) return false;
+        if (appState.guideFilter === "maligno" && !(p.alerts || []).includes("maligno")) return false;
+        if (appState.guideFilter === "rx" && !(p.alerts || []).includes("signo-rx")) return false;
+        if (!q) return true;
+        return (
+          String(p.id) === q ||
+          p.name.toLowerCase().includes(q) ||
+          p.etiology.toLowerCase().includes(q) ||
+          p.clinical.toLowerCase().includes(q) ||
+          p.examTip.toLowerCase().includes(q)
+        );
+      });
+
+      container.innerHTML = `
+        <div class="space-y-4 animate-fade-in">
+          <!-- Barra de búsqueda y filtros -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+            <div class="relative flex-1 min-w-[220px]">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+              <input type="text" value="${escapeHtml(appState.guideSearch)}" oninput="updateGuideSearch(this.value)" placeholder="Buscar patología, signo clínico, Rx o fármaco..." class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs sm:text-sm outline-none focus:border-clinical-600" />
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              ${[
+                ["all", "Todas"],
+                ["mastered", "🎓 Dominadas"],
+                ["maligno", "🚨 Malignas"],
+                ["rx", "☢️ Con Signo Rx"]
+              ].map(([fid, label]) => `
+                <button type="button" onclick="setGuideFilter('${fid}')" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+                  appState.guideFilter === fid
+                    ? "bg-clinical-600 text-white border-clinical-600"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent"
+                }">
+                  ${label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Listado de fichas -->
+          <div class="space-y-4">
+            ${filtered.map(p => {
+              const isMastered = appState.masteredIds.includes(p.id);
+              const alerts = p.alerts || [];
+              return `
+                <article class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                  <div class="flex flex-wrap items-start justify-between gap-2 mb-3 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                    <div>
+                      <div class="flex flex-wrap items-center gap-2">
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                          ${p.id}. ${escapeHtml(p.name)}
+                        </h3>
+                        ${isMastered ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[11px] font-bold">🎓 Dominada</span>` : ""}
+                      </div>
+                      <p class="text-xs font-semibold text-clinical-600 dark:text-cyan-400 mt-0.5">${escapeHtml(p.category)}</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      ${alerts.includes("maligno") ? `<span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 text-[11px] font-extrabold">🚨 Maligno</span>` : ""}
+                      ${alerts.includes("alta-recidiva") ? `<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[11px] font-extrabold">⚠️ Alta Recidiva</span>` : ""}
+                      ${alerts.includes("signo-rx") ? `<span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 text-[11px] font-extrabold">☢️ Signo Rx</span>` : ""}
+                      <button type="button" onclick="toggleMasteredPathology(${p.id})" class="px-3 py-1 rounded-full border text-xs font-bold transition ${
+                        isMastered
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "bg-slate-50 dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-emerald-500"
+                      }">
+                        ${isMastered ? "✓ Dominada" : "☆ Marcar"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                      <p class="text-[11px] font-extrabold uppercase text-clinical-600 dark:text-cyan-400 mb-1">🧬 Etiología / Patogénesis</p>
+                      <p class="text-slate-700 dark:text-slate-200">${escapeHtml(p.etiology)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                      <p class="text-[11px] font-extrabold uppercase text-rose-600 dark:text-rose-400 mb-1">📍 Localización</p>
+                      <p class="text-slate-700 dark:text-slate-200">${escapeHtml(p.location)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                      <p class="text-[11px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400 mb-1">🩺 Características Clínicas</p>
+                      <p class="text-slate-700 dark:text-slate-200">${escapeHtml(p.clinical)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                      <p class="text-[11px] font-extrabold uppercase text-sky-700 dark:text-sky-400 mb-1">☢️ Radiografía / Imagen</p>
+                      <p class="text-slate-700 dark:text-slate-200">${escapeHtml(p.radiographic)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                      <p class="text-[11px] font-extrabold uppercase text-amber-700 dark:text-amber-400 mb-1">💊 Tratamiento y Recurrencia</p>
+                      <p class="text-slate-700 dark:text-slate-200">${escapeHtml(p.treatment)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60">
+                      <p class="text-[11px] font-extrabold uppercase text-amber-800 dark:text-amber-300 mb-1">⭐ Perla de Examen</p>
+                      <p class="font-semibold text-amber-950 dark:text-amber-100">${escapeHtml(p.examTip)}</p>
+                    </div>
+                  </div>
+
+                  ${renderPathologyVisualsBlock(p.id, false)}
+                </article>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function updateGuideSearch(val) {
+      appState.guideSearch = val;
+      renderGuideView();
+    }
+
+    function setGuideFilter(fid) {
+      appState.guideFilter = fid;
+      renderGuideView();
+    }
+
+    function toggleMasteredPathology(pathId) {
+      const idNum = Number(pathId);
+      const idx = appState.masteredIds.indexOf(idNum);
+      if (idx >= 0) {
+        appState.masteredIds.splice(idx, 1);
+      } else {
+        appState.masteredIds.push(idNum);
+        appState.xp += 10;
+        playToneFeedback("success");
+        showToast(`🎓 ¡Patología #${idNum} marcada como dominada! (+10 XP)`, "emerald");
+      }
+      saveAppState();
+      renderActiveView();
+    }
+
+    /* ==========================================================================
+       13. INICIALIZACIÓN DE EVENTOS Y ARRANQUE
+       ========================================================================== */
+    function bindGlobalEvents() {
+      const btnPhotos = document.getElementById("btn-open-photos-modal");
+      if (btnPhotos) btnPhotos.addEventListener("click", openPhotosManagerModal);
+
+      const btnClosePhotos = document.getElementById("btn-close-photos-modal");
+      if (btnClosePhotos) btnClosePhotos.addEventListener("click", closePhotosManagerModal);
+
+      const photosSearch = document.getElementById("photos-modal-search");
+      if (photosSearch) photosSearch.addEventListener("input", renderPhotosManagerModal);
+
+      const btnDark = document.getElementById("btn-dark-mode");
+      if (btnDark) {
+        btnDark.addEventListener("click", () => {
+          appState.darkMode = !appState.darkMode;
+          document.documentElement.classList.toggle("dark", appState.darkMode);
+          btnDark.textContent = appState.darkMode ? "☀️" : "🌙";
+          saveAppState();
+        });
+      }
+
+      const resetModal = document.getElementById("reset-confirm-modal");
+      const btnResetOpen = document.getElementById("btn-reset-modal");
+      const btnResetCancel = document.getElementById("btn-cancel-reset");
+      const btnResetConfirm = document.getElementById("btn-confirm-reset");
+
+      if (btnResetOpen && resetModal) {
+        btnResetOpen.addEventListener("click", () => {
+          resetModal.classList.remove("hidden");
+          resetModal.classList.add("flex");
+        });
+      }
+      if (btnResetCancel && resetModal) {
+        btnResetCancel.addEventListener("click", () => {
+          resetModal.classList.add("hidden");
+          resetModal.classList.remove("flex");
+        });
+      }
+      if (btnResetConfirm && resetModal) {
+        btnResetConfirm.addEventListener("click", () => {
+          appState.xp = 0;
+          appState.streak = 0;
+          appState.masteredIds = [];
+          saveAppState();
+          resetModal.classList.add("hidden");
+          resetModal.classList.remove("flex");
+          renderActiveView();
+          showToast("🔄 Progreso reiniciado", "clinical");
+        });
+      }
+
+      const visualModal = document.getElementById("visual-modal");
+      const btnCloseVisual = document.getElementById("btn-close-visual-modal");
+      if (btnCloseVisual && visualModal) {
+        btnCloseVisual.addEventListener("click", () => {
+          visualModal.classList.add("hidden");
+          visualModal.classList.remove("flex");
+        });
+      }
+
+      const btnCloseLightbox = document.getElementById("btn-close-lightbox");
+      if (btnCloseLightbox) {
+        btnCloseLightbox.addEventListener("click", closePhotoLightbox);
+      }
+
+      document.querySelectorAll(".mode-tab").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      document.addEventListener("keydown", e => {
+        if (e.key === "Escape") {
+          closePhotosManagerModal();
+          closePhotoLightbox();
+          if (visualModal) {
+            visualModal.classList.add("hidden");
+            visualModal.classList.remove("flex");
+          }
+          if (resetModal) {
+            resetModal.classList.add("hidden");
+            resetModal.classList.remove("flex");
+          }
+        }
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      loadAppState();
+      bindGlobalEvents();
+      renderUnitPills();
+      updateHeaderStatsUI();
+      switchTab(appState.activeTab || "quiz");
+      await loadUserPhotosFromDB();
+      await detectRepoFolderPhotos(false);
+    });
+  </script>
+</body>
+</html>
